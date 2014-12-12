@@ -29,5 +29,48 @@ DKTabPageViewController *tabPageViewController = [[DKTabPageViewController alloc
 [self.view addSubview:tabPageViewController.view];
 ```
 
+### Flexible and easy to use interface
+
+``` objective-c
+@property (nonatomic, assign) NSInteger selectedIndex;
+@property (nonatomic, readonly) UIViewController *selectedViewController;
+
+/**
+ *  Whether show the Tab Bar. Defaults to YES.
+ */
+@property (nonatomic, assign) BOOL showTabPageBar;
+
+/**
+ *  Whether allow scroll gestures. Defaults to YES.
+ */
+@property (nonatomic, assign) BOOL gestureScrollEnabled;
+
+/**
+ *  The block to be executed on the page changed.
+ */
+@property (nonatomic, copy) void (^pageChangedBlock)(NSInteger selectedIndex);
+```
+
+### Customizable Tab Bar
+
+``` objective-c
+/**
+ *  Height of the tab bar. Defautls to 40.
+ */
+@property (nonatomic, assign) CGFloat tabBarHeight UI_APPEARANCE_SELECTOR;
+
+/**
+ *  Font of the tab bar. Defautls to [UIFont systemFontOfSize:14].
+ */
+@property (nonatomic, strong) UIFont *titleFont UI_APPEARANCE_SELECTOR;
+
+/**
+ *  The selection indicator is draw on bottom of the tab bar.
+ */
+@property (nonatomic, strong) UIView *selectionIndicatorView;
+
+@property(nonatomic, copy) UIColor *backgroundColor UI_APPEARANCE_SELECTOR;
+```
+
 ## License
 This code is distributed under the terms and conditions of the <a href="https://github.com/zhangao0086/DKTabPageViewController/master/LICENSE">MIT license</a>.
