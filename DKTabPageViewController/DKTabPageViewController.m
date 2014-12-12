@@ -12,7 +12,7 @@
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-CGSize getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
+CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
     if ([[[UIDevice currentDevice] systemVersion] intValue] >= 7) {
         CGSize textSize = [text boundingRectWithSize:CGSizeMake(maxWidth, MAXFLOAT)
                                              options:NSStringDrawingUsesLineFragmentOrigin
@@ -79,11 +79,18 @@ CGSize getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
         [[DKTabPageBar appearance] setTabBarHeight:40];
         [[DKTabPageBar appearance] setTitleFont:[UIFont systemFontOfSize:14]];
         [[DKTabPageBar appearance] setBackgroundColor:[UIColor whiteColor]];
-        
+    }
+}
+
+- (instancetype)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
+    if (self) {
         UIView *defaultSelectionIndicatorView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 3)];
         defaultSelectionIndicatorView.backgroundColor = DKTABPAGE_RGB_COLOR(231, 53, 53);
-        [[DKTabPageBar appearance] setSelectionIndicatorView:defaultSelectionIndicatorView];
+        
+        self.selectionIndicatorView = defaultSelectionIndicatorView;
     }
+    return self;
 }
 
 - (void)drawRect:(CGRect)rect {
@@ -116,7 +123,7 @@ CGSize getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
                 
                 button = itemButton;
                 
-                CGFloat titleWidth = getTextSize(self.titleFont, vcItem.title, CGFLOAT_MAX).width + 5;
+                CGFloat titleWidth = dktabpage_getTextSize(self.titleFont, vcItem.title, CGFLOAT_MAX).width + 5;
                 if (titleWidth > indicatorWidth) {
                     indicatorWidth = titleWidth;
                 }
@@ -135,6 +142,7 @@ CGSize getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
         }
         
         self.indicatorWidth = indicatorWidth;
+        [self addSubview:self.selectionIndicatorView];
         [self setupSelectionIndicatorView];
     }
 }
@@ -156,9 +164,6 @@ CGSize getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
 }
 
 - (void)setupSelectionIndicatorView {
-    if (self.selectionIndicatorView.superview != self) {
-        [self addSubview:self.selectionIndicatorView];
-    }
     CGFloat offset = self.itemSize.width - self.indicatorWidth;
     self.selectionIndicatorView.frame = CGRectMake(self.itemSize.width * self.selectedIndex + offset / 2,
                                                    CGRectGetHeight(self.bounds) - CGRectGetHeight(self.selectionIndicatorView.bounds),
@@ -200,10 +205,9 @@ CGSize getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
 }
 
 - (void)setSelectionIndicatorView:(UIView *)selectionIndicatorView {
-    [_selectionIndicatorView removeFromSuperview];
     _selectionIndicatorView = selectionIndicatorView;
     
-    [self setupSelectionIndicatorView];
+    [self setNeedsDisplay];
 }
 
 - (void)setTitleFont:(UIFont *)titleFont {

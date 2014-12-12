@@ -53,7 +53,7 @@
 /**
  *  The selection indicator is draw on bottom of the tab bar.
  */
-@property (nonatomic, strong) UIView *selectionIndicatorView UI_APPEARANCE_SELECTOR;
+@property (nonatomic, strong) UIView *selectionIndicatorView;
 
 @property(nonatomic, copy) UIColor *backgroundColor UI_APPEARANCE_SELECTOR;
 
