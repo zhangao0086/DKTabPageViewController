@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9CA203C91A3A8C8A008149AF /* TableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CA203C81A3A8C8A008149AF /* TableViewController.m */; };
 		9CA61CC11A37F0C70063A29C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CA61CC01A37F0C70063A29C /* main.m */; };
 		9CA61CC41A37F0C70063A29C /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CA61CC31A37F0C70063A29C /* AppDelegate.m */; };
 		9CA61CC71A37F0C70063A29C /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CA61CC61A37F0C70063A29C /* ViewController.m */; };
@@ -28,6 +29,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		9CA203C71A3A8C8A008149AF /* TableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableViewController.h; sourceTree = "<group>"; };
+		9CA203C81A3A8C8A008149AF /* TableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TableViewController.m; sourceTree = "<group>"; };
 		9CA61CBB1A37F0C70063A29C /* DKTabPageViewControllerDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DKTabPageViewControllerDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9CA61CBF1A37F0C70063A29C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9CA61CC01A37F0C70063A29C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -89,6 +92,8 @@
 				9CA61CC31A37F0C70063A29C /* AppDelegate.m */,
 				9CA61CC51A37F0C70063A29C /* ViewController.h */,
 				9CA61CC61A37F0C70063A29C /* ViewController.m */,
+				9CA203C71A3A8C8A008149AF /* TableViewController.h */,
+				9CA203C81A3A8C8A008149AF /* TableViewController.m */,
 				9CA61CC81A37F0C70063A29C /* Main.storyboard */,
 				9CA61CCB1A37F0C70063A29C /* Images.xcassets */,
 				9CA61CCD1A37F0C70063A29C /* LaunchScreen.xib */,
@@ -236,6 +241,7 @@
 				9CA61CC71A37F0C70063A29C /* ViewController.m in Sources */,
 				9CA61CC41A37F0C70063A29C /* AppDelegate.m in Sources */,
 				9CA61CE71A37F15F0063A29C /* DKTabPageViewController.m in Sources */,
+				9CA203C91A3A8C8A008149AF /* TableViewController.m in Sources */,
 				9CA61CC11A37F0C70063A29C /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -295,7 +301,8 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -312,7 +319,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -337,7 +344,8 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -348,7 +356,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -360,6 +368,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = DKTabPageViewControllerDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -370,6 +379,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = DKTabPageViewControllerDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -429,6 +439,7 @@
 				9CA61CE01A37F0C70063A29C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		9CA61CE11A37F0C70063A29C /* Build configuration list for PBXNativeTarget "DKTabPageViewControllerDemoTests" */ = {
 			isa = XCConfigurationList;
@@ -437,6 +448,7 @@
 				9CA61CE31A37F0C70063A29C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
