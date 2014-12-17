@@ -254,6 +254,8 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
     
     self.mainScrollView.contentSize = CGSizeMake(CGRectGetWidth(self.mainScrollView.bounds) * self.childViewControllers.count, 0);
     self.mainScrollView.contentOffset = CGPointMake(CGRectGetWidth(self.mainScrollView.bounds) * self.selectedIndex, 0);
+    
+    [self cleanupSubviews];
 }
 
 - (void)viewDidLoad {
@@ -341,8 +343,12 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
 }
 
 - (void)setSelectedIndex:(NSInteger)selectedIndex {
-    self.mainScrollView.contentOffset = CGPointMake(selectedIndex * CGRectGetWidth(self.mainScrollView.bounds), 0);
-    [self setSelectedIndexByIndex:selectedIndex];
+    if (self.mainScrollView == nil) {
+        _selectedIndex = selectedIndex;
+    } else {
+        self.mainScrollView.contentOffset = CGPointMake(selectedIndex * CGRectGetWidth(self.mainScrollView.bounds), 0);
+        [self setSelectedIndexByIndex:selectedIndex];
+    }
 }
 
 - (void)addConstraintsToView:(UIView *)view forIndex:(NSInteger)index {
@@ -371,33 +377,36 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
                                                                                           @"superView" : self.mainScrollView}]];
 }
 
+- (void)cleanupSubviews {
+    DKTabPageViewControllerItem *selectedItem = self.items[self.selectedIndex];
+    for (DKTabPageViewControllerItem *item in self.items) {
+        if (item == selectedItem) {
+            item.button.selected = YES;
+        } else {
+            item.button.selected = NO;
+            if (item.contentViewController.isViewLoaded) {
+                [item.contentViewController.view removeFromSuperview];
+            }
+        }
+    }
+}
+
 - (void)setSelectedIndexByIndex:(NSInteger)newIndex{
     DKTabPageViewControllerItem *selectedItem = self.items[newIndex];
     
     if ([selectedItem isKindOfClass:[DKTabPageViewControllerItem class]]) {
         if (selectedItem.contentViewController == nil) return;
         
-        DKTabPageViewControllerItem *previousSelectedItem;
-        if (self.selectedIndex != newIndex) {
-            previousSelectedItem = self.items[self.selectedIndex];
-            previousSelectedItem.button.selected = NO;
-            [previousSelectedItem.contentViewController viewWillDisappear:YES];
-            [previousSelectedItem.contentViewController viewDidDisappear:YES];
-            selectedItem.button.selected = YES;
-            _selectedIndex = newIndex;
-        }
-        self.tabPageBar.selectedIndex = newIndex;
-        if (selectedItem.contentViewController.view.superview == nil) {
-            [self.mainScrollView addSubview:selectedItem.contentViewController.view];
-            [self addConstraintsToView:selectedItem.contentViewController.view forIndex:self.tabPageBar.selectedIndex];
-        } else {
-            [selectedItem.contentViewController viewWillAppear:YES];
-            [selectedItem.contentViewController viewDidAppear:YES];
+        if (self.pageChangedBlock && self.selectedIndex != newIndex) {
+            self.pageChangedBlock(newIndex);
         }
         
-        if (self.pageChangedBlock && previousSelectedItem != nil) {
-            self.pageChangedBlock(self.selectedIndex);
-        }
+        _selectedIndex = newIndex;
+        
+        self.tabPageBar.selectedIndex = _selectedIndex;
+        [self.mainScrollView addSubview:selectedItem.contentViewController.view];
+        [self addConstraintsToView:selectedItem.contentViewController.view forIndex:_selectedIndex];
+        [self cleanupSubviews];
     }
 }
 
@@ -422,10 +431,8 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
     }
     if (index != -1 && index < self.childViewControllers.count) {
         DKTabPageViewControllerItem *item = self.items[index];
-        if (item.contentViewController.view.superview == nil) {
-            [self.mainScrollView addSubview:item.contentViewController.view];
-            [self addConstraintsToView:item.contentViewController.view forIndex:index];
-        }
+        [self.mainScrollView addSubview:item.contentViewController.view];
+        [self addConstraintsToView:item.contentViewController.view forIndex:index];
     }
 }
 
