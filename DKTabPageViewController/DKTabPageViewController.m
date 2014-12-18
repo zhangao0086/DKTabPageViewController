@@ -397,11 +397,11 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
     if ([selectedItem isKindOfClass:[DKTabPageViewControllerItem class]]) {
         if (selectedItem.contentViewController == nil) return;
         
-        if (self.pageChangedBlock && self.selectedIndex != newIndex) {
+        NSInteger previousSelectedIndex = _selectedIndex;
+        _selectedIndex = newIndex;
+        if (self.pageChangedBlock && previousSelectedIndex != newIndex) {
             self.pageChangedBlock(newIndex);
         }
-        
-        _selectedIndex = newIndex;
         
         self.tabPageBar.selectedIndex = _selectedIndex;
         [self.mainScrollView addSubview:selectedItem.contentViewController.view];
