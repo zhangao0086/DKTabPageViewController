@@ -93,6 +93,34 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
     return self;
 }
 
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    
+    self.itemSize = CGSizeMake(CGRectGetWidth(self.bounds) / self.items.count, CGRectGetHeight(self.bounds));
+    CGFloat currentX = 0;
+    for (int i = 0; i < self.items.count; i++) {
+        DKTabPageItem *item = self.items[i];
+        UIButton *button;
+        
+        if ([item isKindOfClass:[DKTabPageViewControllerItem class]]) {
+            DKTabPageViewControllerItem *vcItem = (DKTabPageViewControllerItem *)item;
+            
+            button = vcItem.button;
+        } else if ([item isKindOfClass:[DKTabPageButtonItem class]]) {
+            DKTabPageButtonItem *buttonItem = (DKTabPageButtonItem *)item;
+            
+            button = buttonItem.button;
+        } else {
+            assert(0);
+        }
+        
+        button.frame = CGRectMake(currentX, 0, self.itemSize.width, self.itemSize.height);
+        currentX += self.itemSize.width;
+    }
+    
+    [self setupSelectionIndicatorView];
+}
+
 - (void)drawRect:(CGRect)rect {
     [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     
@@ -102,9 +130,7 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
     [self addSubview:underline];
     
     if (self.items.count != 0) {
-        CGFloat currentX = 0;
         CGFloat indicatorWidth = 0;
-        self.itemSize = CGSizeMake(CGRectGetWidth(self.bounds) / self.items.count, CGRectGetHeight(self.bounds));
         
         for (int i = 0; i < self.items.count; i++) {
             DKTabPageItem *item = self.items[i];
@@ -136,9 +162,7 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
                 assert(0);
             }
             
-            button.frame = CGRectMake(currentX, 0, self.itemSize.width, self.itemSize.height);
             [self addSubview:button];
-            currentX += self.itemSize.width;
         }
         
         self.indicatorWidth = indicatorWidth;
@@ -271,13 +295,21 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
     self.selectedIndex = _selectedIndex;
 }
 
+- (void)viewWillLayoutSubviews {
+    [super viewWillLayoutSubviews];
+    
+    CGRect tabPageBarFrame = self.tabPageBar.frame;
+    tabPageBarFrame.size.width = CGRectGetWidth(self.view.bounds);
+    self.tabPageBar.frame = tabPageBarFrame;
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
 }
 
 - (void)setupTabBar {
     if (self.showTabPageBar) {
-        DKTabPageBar *tabPageBar = [[DKTabPageBar alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), self.tabPageBar.tabBarHeight)];
+        DKTabPageBar *tabPageBar = [[DKTabPageBar alloc] initWithFrame:CGRectMake(0, 0, 0, self.tabPageBar.tabBarHeight)];
         
         __weak DKTabPageViewController *weakSelf = self;
         [tabPageBar setTabChangedBlock:^(NSInteger selectedIndex) {
