@@ -280,6 +280,11 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
     self.mainScrollView.contentOffset = CGPointMake(CGRectGetWidth(self.mainScrollView.bounds) * self.selectedIndex, 0);
     
     [self cleanupSubviews];
+    
+    if (self.selectedViewController) {
+        [self.mainScrollView removeConstraints:self.mainScrollView.constraints];
+        [self addConstraintsToView:self.selectedViewController.view forIndex:self.selectedIndex];
+    }
 }
 
 - (void)viewDidLoad {
