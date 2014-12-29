@@ -421,8 +421,10 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
             item.button.selected = YES;
         } else {
             item.button.selected = NO;
-            if (item.contentViewController.isViewLoaded) {
-                [item.contentViewController.view removeFromSuperview];
+            if ([item isKindOfClass:[DKTabPageViewControllerItem class]]) {
+                if (item.contentViewController.isViewLoaded) {
+                    [item.contentViewController.view removeFromSuperview];
+                }
             }
         }
     }
