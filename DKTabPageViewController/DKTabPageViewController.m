@@ -280,6 +280,11 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
     self.mainScrollView.contentOffset = CGPointMake(CGRectGetWidth(self.mainScrollView.bounds) * self.selectedIndex, 0);
     
     [self cleanupSubviews];
+    
+    if (self.selectedViewController) {
+        [self.mainScrollView removeConstraints:self.mainScrollView.constraints];
+        [self addConstraintsToView:self.selectedViewController.view forIndex:self.selectedIndex];
+    }
 }
 
 - (void)viewDidLoad {
@@ -416,8 +421,10 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
             item.button.selected = YES;
         } else {
             item.button.selected = NO;
-            if (item.contentViewController.isViewLoaded) {
-                [item.contentViewController.view removeFromSuperview];
+            if ([item isKindOfClass:[DKTabPageViewControllerItem class]]) {
+                if (item.contentViewController.isViewLoaded) {
+                    [item.contentViewController.view removeFromSuperview];
+                }
             }
         }
     }

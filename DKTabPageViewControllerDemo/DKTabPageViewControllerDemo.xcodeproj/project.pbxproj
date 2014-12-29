@@ -14,19 +14,8 @@
 		9CA61CCA1A37F0C70063A29C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9CA61CC81A37F0C70063A29C /* Main.storyboard */; };
 		9CA61CCC1A37F0C70063A29C /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9CA61CCB1A37F0C70063A29C /* Images.xcassets */; };
 		9CA61CCF1A37F0C70063A29C /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9CA61CCD1A37F0C70063A29C /* LaunchScreen.xib */; };
-		9CA61CDB1A37F0C70063A29C /* DKTabPageViewControllerDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CA61CDA1A37F0C70063A29C /* DKTabPageViewControllerDemoTests.m */; };
 		9CA61CE71A37F15F0063A29C /* DKTabPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CA61CE61A37F15F0063A29C /* DKTabPageViewController.m */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		9CA61CD51A37F0C70063A29C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9CA61CB31A37F0C70063A29C /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 9CA61CBA1A37F0C70063A29C;
-			remoteInfo = DKTabPageViewControllerDemo;
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		9CA203C71A3A8C8A008149AF /* TableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableViewController.h; sourceTree = "<group>"; };
@@ -41,22 +30,12 @@
 		9CA61CC91A37F0C70063A29C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		9CA61CCB1A37F0C70063A29C /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		9CA61CCE1A37F0C70063A29C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
-		9CA61CD41A37F0C70063A29C /* DKTabPageViewControllerDemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DKTabPageViewControllerDemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		9CA61CD91A37F0C70063A29C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		9CA61CDA1A37F0C70063A29C /* DKTabPageViewControllerDemoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DKTabPageViewControllerDemoTests.m; sourceTree = "<group>"; };
 		9CA61CE51A37F15F0063A29C /* DKTabPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DKTabPageViewController.h; sourceTree = "<group>"; };
 		9CA61CE61A37F15F0063A29C /* DKTabPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DKTabPageViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		9CA61CB81A37F0C70063A29C /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		9CA61CD11A37F0C70063A29C /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -70,7 +49,6 @@
 			isa = PBXGroup;
 			children = (
 				9CA61CBD1A37F0C70063A29C /* DKTabPageViewControllerDemo */,
-				9CA61CD71A37F0C70063A29C /* DKTabPageViewControllerDemoTests */,
 				9CA61CBC1A37F0C70063A29C /* Products */,
 			);
 			sourceTree = "<group>";
@@ -79,7 +57,6 @@
 			isa = PBXGroup;
 			children = (
 				9CA61CBB1A37F0C70063A29C /* DKTabPageViewControllerDemo.app */,
-				9CA61CD41A37F0C70063A29C /* DKTabPageViewControllerDemoTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -107,23 +84,6 @@
 			children = (
 				9CA61CBF1A37F0C70063A29C /* Info.plist */,
 				9CA61CC01A37F0C70063A29C /* main.m */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		9CA61CD71A37F0C70063A29C /* DKTabPageViewControllerDemoTests */ = {
-			isa = PBXGroup;
-			children = (
-				9CA61CDA1A37F0C70063A29C /* DKTabPageViewControllerDemoTests.m */,
-				9CA61CD81A37F0C70063A29C /* Supporting Files */,
-			);
-			path = DKTabPageViewControllerDemoTests;
-			sourceTree = "<group>";
-		};
-		9CA61CD81A37F0C70063A29C /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				9CA61CD91A37F0C70063A29C /* Info.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -158,24 +118,6 @@
 			productReference = 9CA61CBB1A37F0C70063A29C /* DKTabPageViewControllerDemo.app */;
 			productType = "com.apple.product-type.application";
 		};
-		9CA61CD31A37F0C70063A29C /* DKTabPageViewControllerDemoTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 9CA61CE11A37F0C70063A29C /* Build configuration list for PBXNativeTarget "DKTabPageViewControllerDemoTests" */;
-			buildPhases = (
-				9CA61CD01A37F0C70063A29C /* Sources */,
-				9CA61CD11A37F0C70063A29C /* Frameworks */,
-				9CA61CD21A37F0C70063A29C /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				9CA61CD61A37F0C70063A29C /* PBXTargetDependency */,
-			);
-			name = DKTabPageViewControllerDemoTests;
-			productName = DKTabPageViewControllerDemoTests;
-			productReference = 9CA61CD41A37F0C70063A29C /* DKTabPageViewControllerDemoTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -187,10 +129,6 @@
 				TargetAttributes = {
 					9CA61CBA1A37F0C70063A29C = {
 						CreatedOnToolsVersion = 6.2;
-					};
-					9CA61CD31A37F0C70063A29C = {
-						CreatedOnToolsVersion = 6.2;
-						TestTargetID = 9CA61CBA1A37F0C70063A29C;
 					};
 				};
 			};
@@ -208,7 +146,6 @@
 			projectRoot = "";
 			targets = (
 				9CA61CBA1A37F0C70063A29C /* DKTabPageViewControllerDemo */,
-				9CA61CD31A37F0C70063A29C /* DKTabPageViewControllerDemoTests */,
 			);
 		};
 /* End PBXProject section */
@@ -221,13 +158,6 @@
 				9CA61CCA1A37F0C70063A29C /* Main.storyboard in Resources */,
 				9CA61CCF1A37F0C70063A29C /* LaunchScreen.xib in Resources */,
 				9CA61CCC1A37F0C70063A29C /* Images.xcassets in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		9CA61CD21A37F0C70063A29C /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -246,23 +176,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		9CA61CD01A37F0C70063A29C /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				9CA61CDB1A37F0C70063A29C /* DKTabPageViewControllerDemoTests.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		9CA61CD61A37F0C70063A29C /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 9CA61CBA1A37F0C70063A29C /* DKTabPageViewControllerDemo */;
-			targetProxy = 9CA61CD51A37F0C70063A29C /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		9CA61CC81A37F0C70063A29C /* Main.storyboard */ = {
@@ -386,40 +300,6 @@
 			};
 			name = Release;
 		};
-		9CA61CE21A37F0C70063A29C /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-				);
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = DKTabPageViewControllerDemoTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DKTabPageViewControllerDemo.app/DKTabPageViewControllerDemo";
-			};
-			name = Debug;
-		};
-		9CA61CE31A37F0C70063A29C /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = DKTabPageViewControllerDemoTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DKTabPageViewControllerDemo.app/DKTabPageViewControllerDemo";
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -437,15 +317,6 @@
 			buildConfigurations = (
 				9CA61CDF1A37F0C70063A29C /* Debug */,
 				9CA61CE01A37F0C70063A29C /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		9CA61CE11A37F0C70063A29C /* Build configuration list for PBXNativeTarget "DKTabPageViewControllerDemoTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				9CA61CE21A37F0C70063A29C /* Debug */,
-				9CA61CE31A37F0C70063A29C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
