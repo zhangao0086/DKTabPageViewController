@@ -1,6 +1,7 @@
 # DKTabPageViewController
 ![GIF](https://raw.githubusercontent.com/zhangao0086/DKTabPageViewController/master/preview1.gif)
 ![GIF](https://raw.githubusercontent.com/zhangao0086/DKTabPageViewController/master/preview2.gif)
+![GIF](https://raw.githubusercontent.com/zhangao0086/DKTabPageViewController/master/preview3.gif)
 ## Overview
 DKTabPageViewController is an UIViewController subclass that support for multiple tab and gestures.
 
