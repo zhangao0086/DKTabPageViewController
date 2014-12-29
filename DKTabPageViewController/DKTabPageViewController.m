@@ -127,6 +127,7 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
     UIView *underline = [[UIView alloc] initWithFrame:CGRectMake(0, CGRectGetHeight(self.bounds) - 0.5,
                                                                  CGRectGetWidth(self.bounds), 0.5)];
     underline.backgroundColor = DKTABPAGE_RGB_COLOR(208, 208, 208);
+    underline.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
     [self addSubview:underline];
     
     if (self.items.count != 0) {
