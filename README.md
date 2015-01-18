@@ -5,6 +5,11 @@
 ## Overview
 DKTabPageViewController is an UIViewController subclass that support for multiple tab and gestures.
 
+----
+
+**01.18.2015 - Update:**  
+**1.0.0**: Adding support for iOS 6.
+
 ## How To Get Started
 
 Add `#import "DKTabPageViewController.h"` to the top of classes that will use it.  
