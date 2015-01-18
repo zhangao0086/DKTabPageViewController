@@ -8,23 +8,26 @@
 
 #import "DKTabPageViewController.h"
 
-#define DKTABPAGE_RGB_COLOR(r,g,b)      [UIColor colorWithRed:(r)/255.0f green:(g)/255.0f blue:(b)/255.0f alpha:1]
+#define DKTABPAGE_RGB_COLOR(r,g,b)                [UIColor colorWithRed:(r)/255.0f green:(g)/255.0f blue:(b)/255.0f alpha:1]
+#define DKTABPAGE_IOS_VERSION_GREATER_THAN_7      ([[[UIDevice currentDevice] systemVersion] intValue] >= 7)
+
+
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
-    if ([[[UIDevice currentDevice] systemVersion] intValue] >= 7) {
+    if (DKTABPAGE_IOS_VERSION_GREATER_THAN_7) {
         CGSize textSize = [text boundingRectWithSize:CGSizeMake(maxWidth, MAXFLOAT)
                                              options:NSStringDrawingUsesLineFragmentOrigin
                                           attributes:@{NSFontAttributeName: font}
                                              context:nil].size;
         return textSize;
+    } else {
+        CGSize textSize = [text sizeWithFont:font
+                           constrainedToSize:CGSizeMake(maxWidth, MAXFLOAT)
+                               lineBreakMode:NSLineBreakByCharWrapping];
+        return textSize;
     }
-    
-    CGSize textSize = [text sizeWithFont:font
-                       constrainedToSize:CGSizeMake(maxWidth, MAXFLOAT)
-                           lineBreakMode:NSLineBreakByCharWrapping];
-    return textSize;
 }
 #pragma clang diagnostic pop
 
@@ -251,6 +254,72 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
 
 ////////////////////////////////////////////////////////////////////////////////
 
+@interface DKTabPageScrollView : UIScrollView {
+    BOOL contentViewIsAlready;
+}
+
+@property (nonatomic, strong) UIView *contentView;
+
+@end
+
+@implementation DKTabPageScrollView
+
+- (instancetype)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
+    if (self) {
+        _contentView = [[UIView alloc] initWithFrame:self.bounds];
+        _contentView.translatesAutoresizingMaskIntoConstraints = NO;
+        
+        [self addSubview:_contentView];
+        
+        NSDictionary *viewDict = NSDictionaryOfVariableBindings(_contentView, self);
+        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_contentView(==self)]|" options:0 metrics:0 views:viewDict]];
+        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_contentView(==self)]|" options:0 metrics:0 views:viewDict]];
+        contentViewIsAlready = YES;
+    }
+    return self;
+}
+
+- (void)addSubview:(UIView *)view {
+    if (!contentViewIsAlready) {
+        [super addSubview:view];
+    } else {
+        [self.contentView addSubview:view];
+    }
+}
+
+- (void)addConstraint:(NSLayoutConstraint *)constraint {
+    if (!contentViewIsAlready) {
+        [super addConstraint:constraint];
+    } else {
+        [self.contentView addConstraint:constraint];
+    }
+}
+
+- (void)addConstraints:(NSArray *)constraints {
+    if (!contentViewIsAlready) {
+        [super addConstraints:constraints];
+    } else {
+        [self.contentView addConstraints:constraints];
+    }
+}
+
+- (void)removeConstraints:(NSArray *)constraints {
+    if (!contentViewIsAlready) {
+        [super removeConstraints:constraints];
+    } else {
+        [self.contentView removeConstraints:constraints];
+    }
+}
+
+- (NSArray *)constraints {
+    return self.contentView.constraints;
+}
+
+@end
+
+////////////////////////////////////////////////////////////////////////////////
+
 @interface DKTabPageViewController () <UIScrollViewDelegate>
 
 @property (nonatomic, copy) NSArray *items;
@@ -294,7 +363,10 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
     [super viewDidLoad];
     
     self.view.backgroundColor = [UIColor clearColor];
-    self.automaticallyAdjustsScrollViewInsets = NO;
+    
+    if ([self respondsToSelector:@selector(automaticallyAdjustsScrollViewInsets)]) {
+        self.automaticallyAdjustsScrollViewInsets = NO;
+    }
     
     [self setupTabBar];
     [self setupMainScrollView];
@@ -332,7 +404,12 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
 }
 
 - (void)setupMainScrollView {
-    UIScrollView *mainScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), 0)];
+    UIScrollView *mainScrollView;
+    if (DKTABPAGE_IOS_VERSION_GREATER_THAN_7) {
+        mainScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), 0)];
+    } else {
+        mainScrollView = [[DKTabPageScrollView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), 0)];
+    }
     mainScrollView.translatesAutoresizingMaskIntoConstraints = NO;
     mainScrollView.scrollEnabled = self.gestureScrollEnabled;
     mainScrollView.pagingEnabled = YES;
@@ -396,7 +473,7 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
     [self.mainScrollView addConstraint:[NSLayoutConstraint constraintWithItem:view
                                                                     attribute:NSLayoutAttributeHeight
                                                                     relatedBy:NSLayoutRelationEqual
-                                                                       toItem:self.mainScrollView
+                                                                       toItem:view.superview
                                                                     attribute:NSLayoutAttributeHeight
                                                                    multiplier:1.0
                                                                      constant:0]];
@@ -404,7 +481,7 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
     [self.mainScrollView addConstraint:[NSLayoutConstraint constraintWithItem:view
                                                                     attribute:NSLayoutAttributeTop
                                                                     relatedBy:NSLayoutRelationEqual
-                                                                       toItem:self.mainScrollView
+                                                                       toItem:view.superview
                                                                     attribute:NSLayoutAttributeTop
                                                                    multiplier:1.0
                                                                      constant:0]];
@@ -414,7 +491,7 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
                                                                                 options:NSLayoutFormatDirectionLeadingToTrailing
                                                                                 metrics:nil
                                                                                   views:@{@"contentView" : view,
-                                                                                          @"superView" : self.mainScrollView}]];
+                                                                                          @"superView" : view.superview}]];
 }
 
 - (void)cleanupSubviews {
@@ -446,8 +523,11 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
         }
         
         self.tabPageBar.selectedIndex = _selectedIndex;
-        [self.mainScrollView addSubview:selectedItem.contentViewController.view];
-        [self addConstraintsToView:selectedItem.contentViewController.view forIndex:_selectedIndex];
+        
+        if (selectedItem.contentViewController.view.superview == nil) {
+            [self.mainScrollView addSubview:selectedItem.contentViewController.view];
+            [self addConstraintsToView:selectedItem.contentViewController.view forIndex:_selectedIndex];
+        }
         [self cleanupSubviews];
     }
 }
@@ -473,8 +553,10 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
     }
     if (index != -1 && index < self.childViewControllers.count) {
         DKTabPageViewControllerItem *item = self.items[index];
-        [self.mainScrollView addSubview:item.contentViewController.view];
-        [self addConstraintsToView:item.contentViewController.view forIndex:index];
+        if (item.contentViewController.view.superview == nil) {
+            [self.mainScrollView addSubview:item.contentViewController.view];
+            [self addConstraintsToView:item.contentViewController.view forIndex:index];
+        }
     }
 }
 
