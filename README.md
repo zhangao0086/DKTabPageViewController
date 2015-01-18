@@ -3,7 +3,7 @@
 ![GIF](https://raw.githubusercontent.com/zhangao0086/DKTabPageViewController/master/preview2.gif)
 ![GIF](https://raw.githubusercontent.com/zhangao0086/DKTabPageViewController/master/preview3.gif)
 ## Overview
-DKTabPageViewController is an UIViewController subclass that support for multiple tab and gestures.
+DKTabPageViewController is an UIViewController subclass that support for multiple tab and gestures.Each tab represents a ViewController instance,independent of each other. View supports lazy loading and response viewWillAppear, viewWillDisappear etc methods.
 
 ----
 
