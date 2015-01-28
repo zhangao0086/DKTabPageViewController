@@ -387,6 +387,12 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
     [super didReceiveMemoryWarning];
 }
 
+- (void)dealloc {
+    // ...
+}
+
+#pragma mark - Methods
+
 - (void)setupTabBar {
     if (self.showTabPageBar) {
         DKTabPageBar *tabPageBar = [[DKTabPageBar alloc] initWithFrame:CGRectMake(0, 0, 0, self.tabPageBar.tabBarHeight)];
@@ -394,7 +400,7 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
         __weak DKTabPageViewController *weakSelf = self;
         [tabPageBar setTabChangedBlock:^(NSInteger selectedIndex) {
             [weakSelf setSelectedIndexByIndex:selectedIndex];
-            weakSelf.mainScrollView.contentOffset = CGPointMake(weakSelf.selectedIndex * CGRectGetWidth(self.mainScrollView.bounds),
+            weakSelf.mainScrollView.contentOffset = CGPointMake(weakSelf.selectedIndex * CGRectGetWidth(weakSelf.mainScrollView.bounds),
                                                                 weakSelf.mainScrollView.contentOffset.y);
         }];
         [self.view addSubview:tabPageBar];
