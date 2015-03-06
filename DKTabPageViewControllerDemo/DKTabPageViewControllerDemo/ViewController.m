@@ -10,7 +10,7 @@
 #import "DKTabPageViewController.h"
 #import "TableViewController.h"
 
-@interface ViewController ()
+@interface ViewController () <DKTabPageBarAnimationDelegate>
 
 @end
 
@@ -37,6 +37,7 @@
     [items addObject:[DKTabPageButtonItem tabPageItemWithButton:extraButton]];
     
     DKTabPageViewController *tabPageViewController = [[DKTabPageViewController alloc] initWithItems:items];
+    tabPageViewController.tabPageBar.delegate = self;
     [self addChildViewController:tabPageViewController];
     [self.view addSubview:tabPageViewController.view];
 }
@@ -47,8 +48,22 @@
 }
 
 - (IBAction)extraButtonClicked:(id)sender {
-    [[[UIAlertView alloc] initWithTitle:@"" message:@"This is a extra button" delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles: nil]
+    [[[UIAlertView alloc] initWithTitle:@""
+                                message:@"This is a extra button"
+                               delegate:nil
+                      cancelButtonTitle:@"Cancel"
+                      otherButtonTitles: nil]
      show];
+}
+
+#pragma mark - DKTabPageBarAnimationDelegate methods
+
+- (void)tabPageBar:(DKTabPageBar *)tabPageBar scrollingFromButton:(UIButton *)fromButton toButton:(UIButton *)toButton progress:(CGFloat)progress {
+    CGFloat fontSize = tabPageBar.titleFont.pointSize;
+    CGFloat selectedFontSize = 18;
+    
+//    toButton.titleLabel.font = [UIFont systemFontOfSize:fontSize + (selectedFontSize - fontSize) * progress];
+//    NSLog(@"progress: %f",progress);
 }
 
 @end

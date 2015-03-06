@@ -182,18 +182,33 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
 }
 
 - (void)onScrollingToIndex:(NSInteger)toIndex progress:(CGFloat)progress {
-    if (self.selectionIndicatorView != nil) {
-        CGFloat offset = self.itemSize.width - CGRectGetWidth(self.selectionIndicatorView.bounds);
-        
-        CGRect frame = self.selectionIndicatorView.frame;
-        frame.origin.x = (CGRectGetWidth(self.selectionIndicatorView.bounds) + offset) * (progress + self.selectedIndex) + offset / 2;
-        self.selectionIndicatorView.frame = frame;
+    NSLog(@"selectedIndex: %zd\t\ttoIndex: %zd", self.selectedIndex, toIndex);
+    if (progress > 1.000) {
+        progress -= 1.000;
+        self.selectedIndex += (toIndex - self.selectedIndex - 1);
     }
     
+    if (self.selectionIndicatorView != nil) {
+        CGFloat offset = self.itemSize.width - CGRectGetWidth(self.selectionIndicatorView.bounds);
+        CGFloat factor = self.selectedIndex > toIndex ? -progress : progress;
+        
+        CGRect frame = self.selectionIndicatorView.frame;
+        frame.origin.x = (CGRectGetWidth(self.selectionIndicatorView.bounds) + offset) * (factor + self.selectedIndex) + offset / 2;
+        self.selectionIndicatorView.frame = frame;
+    }
+
     if (self.delegate) {
+        DKTabPageItem *toItem = nil;
+        if (toIndex != -1) {
+            toItem = self.items[toIndex];
+            if ([toItem isKindOfClass:[DKTabPageButtonItem class]]) {
+                toItem = nil;
+            }
+        }
+
         [self.delegate tabPageBar:self
               scrollingFromButton:[self.items[self.selectedIndex] button]
-                         toButton:[self.items[toIndex] button]
+                         toButton:toItem.button
                          progress:progress];
     }
 }
@@ -234,9 +249,12 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
     [UIView beginAnimations:nil context:nil];
     [self setupSelectionIndicatorView];
     [UIView commitAnimations];
-    
+
     if (self.tabChangedBlock) {
         self.tabChangedBlock(self.selectedIndex);
+    }
+    if (self.delegate) {
+        [self.delegate tabPageBar:self scrollingFromButton:previousItem.button toButton:selectedItem.button progress:1];
     }
 }
 
@@ -356,6 +374,7 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
 
 @property (nonatomic, copy) NSArray *items;
 @property (nonatomic, weak) UIScrollView *mainScrollView;
+@property (nonatomic, strong) DKTabPageBar *tabPageBar;
 
 @end
 
@@ -425,18 +444,24 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
 
 #pragma mark - Methods
 
+- (DKTabPageBar *)tabPageBar {
+    if (_tabPageBar == nil) {
+        _tabPageBar = [DKTabPageBar new];
+    }
+    return _tabPageBar;
+}
+
 - (void)setupTabBar {
     if (self.showTabPageBar) {
-        DKTabPageBar *tabPageBar = [[DKTabPageBar alloc] initWithFrame:CGRectMake(0, 0, 0, self.tabPageBar.tabBarHeight)];
+        self.tabPageBar.frame = CGRectMake(0, 0, 0, self.tabPageBar.tabBarHeight);
         
         __weak DKTabPageViewController *weakSelf = self;
-        [tabPageBar setTabChangedBlock:^(NSInteger selectedIndex) {
+        [self.tabPageBar setTabChangedBlock:^(NSInteger selectedIndex) {
             [weakSelf setSelectedIndexByIndex:selectedIndex];
             weakSelf.mainScrollView.contentOffset = CGPointMake(weakSelf.selectedIndex * CGRectGetWidth(weakSelf.mainScrollView.bounds),
                                                                 weakSelf.mainScrollView.contentOffset.y);
         }];
-        [self.view addSubview:tabPageBar];
-        _tabPageBar = tabPageBar;
+        [self.view addSubview:self.tabPageBar];
         [self.tabPageBar setItems:self.items];
     }
 }
@@ -590,8 +615,8 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
         }
     }
     
-    if (self.showTabPageBar) {
-        [self.tabPageBar onScrollingToIndex:willToIndex progress:(factor - self.selectedIndex)];
+    if (self.showTabPageBar && (scrollView.isDecelerating || scrollView.isDragging)) {
+        [self.tabPageBar onScrollingToIndex:willToIndex progress:ABS(factor - self.selectedIndex)];
     }
 }
 
