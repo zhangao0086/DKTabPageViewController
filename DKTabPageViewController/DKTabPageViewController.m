@@ -11,8 +11,6 @@
 #define DKTABPAGE_RGB_COLOR(r,g,b)                [UIColor colorWithRed:(r)/255.0f green:(g)/255.0f blue:(b)/255.0f alpha:1]
 #define DKTABPAGE_IOS_VERSION_GREATER_THAN_7      ([[[UIDevice currentDevice] systemVersion] intValue] >= 7)
 
-
-
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
@@ -82,6 +80,8 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
         [[DKTabPageBar appearance] setTabBarHeight:40];
         [[DKTabPageBar appearance] setTitleFont:[UIFont systemFontOfSize:14]];
         [[DKTabPageBar appearance] setBackgroundColor:[UIColor whiteColor]];
+        [[DKTabPageBar appearance] setTitleColor:DKTABPAGE_RGB_COLOR(38, 40, 49)];
+        [[DKTabPageBar appearance] setSelectedTitleColor:DKTABPAGE_RGB_COLOR(231, 53, 53)];
     }
 }
 
@@ -181,17 +181,37 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
     [self setNeedsDisplay];
 }
 
+- (void)onScrollingToIndex:(NSInteger)toIndex progress:(CGFloat)progress {
+    if (self.selectionIndicatorView != nil) {
+        CGFloat offset = self.itemSize.width - CGRectGetWidth(self.selectionIndicatorView.bounds);
+        
+        CGRect frame = self.selectionIndicatorView.frame;
+        frame.origin.x = (CGRectGetWidth(self.selectionIndicatorView.bounds) + offset) * (progress + self.selectedIndex) + offset / 2;
+        self.selectionIndicatorView.frame = frame;
+    }
+    
+    if (self.delegate) {
+        [self.delegate tabPageBar:self
+              scrollingFromButton:[self.items[self.selectedIndex] button]
+                         toButton:[self.items[toIndex] button]
+                         progress:progress];
+    }
+}
+
 #pragma mark - private methods
 
 - (void)setupButtonStyleForButton:(UIButton *)button {
-    [button setTitleColor:DKTABPAGE_RGB_COLOR(38, 40, 49) forState:UIControlStateNormal];
-    [button setTitleColor:DKTABPAGE_RGB_COLOR(231, 53, 53) forState:UIControlStateHighlighted];
-    [button setTitleColor:DKTABPAGE_RGB_COLOR(231, 53, 53) forState:UIControlStateSelected];
+    [button setTitleColor:self.titleColor forState:UIControlStateNormal];
+    [button setTitleColor:self.selectedTitleColor forState:UIControlStateHighlighted];
+    [button setTitleColor:self.selectedTitleColor forState:UIControlStateSelected];
     [button setBackgroundColor:[UIColor clearColor]];
     button.titleLabel.font = self.titleFont;
 }
 
 - (void)setupSelectionIndicatorView {
+    if (self.selectionIndicatorView == nil) {
+        return;
+    }
     CGFloat offset = self.itemSize.width - self.indicatorWidth;
     self.selectionIndicatorView.frame = CGRectMake(self.itemSize.width * self.selectedIndex + offset / 2,
                                                    CGRectGetHeight(self.bounds) - CGRectGetHeight(self.selectionIndicatorView.bounds),
@@ -240,6 +260,18 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
 
 - (void)setTitleFont:(UIFont *)titleFont {
     _titleFont = titleFont;
+    
+    [self setNeedsDisplay];
+}
+
+- (void)setTitleColor:(UIColor *)titleColor {
+    _titleColor = titleColor;
+    
+    [self setNeedsDisplay];
+}
+
+- (void)setSelectedTitleColor:(UIColor *)selectedTitleColor {
+    _selectedTitleColor = selectedTitleColor;
     
     [self setNeedsDisplay];
 }
@@ -543,26 +575,23 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
     CGPoint contentOffset = scrollView.contentOffset;
     CGFloat factor = contentOffset.x / CGRectGetWidth(scrollView.bounds);
     
-    if (self.showTabPageBar) {
-        CGFloat offset = self.tabPageBar.itemSize.width - CGRectGetWidth(self.tabPageBar.selectionIndicatorView.bounds);
-        
-        CGRect frame = self.tabPageBar.selectionIndicatorView.frame;
-        frame.origin.x = (CGRectGetWidth(self.tabPageBar.selectionIndicatorView.bounds) + offset) * factor + offset / 2;
-        self.tabPageBar.selectionIndicatorView.frame = frame;
+    NSInteger willToIndex = -1;
+    if (factor > self.selectedIndex) {
+        willToIndex = ceil(factor);
+    } else if (factor < self.selectedIndex) {
+        willToIndex = floor(factor);
     }
     
-    NSInteger index = -1;
-    if (factor > self.selectedIndex) {
-        index = ceil(factor);
-    } else if (factor < self.selectedIndex) {
-        index = floor(factor);
-    }
-    if (index != -1 && index < self.childViewControllers.count) {
-        DKTabPageViewControllerItem *item = self.items[index];
+    if (willToIndex != -1 && willToIndex < self.childViewControllers.count) {
+        DKTabPageViewControllerItem *item = self.items[willToIndex];
         if (item.contentViewController.view.superview == nil) {
             [self.mainScrollView addSubview:item.contentViewController.view];
-            [self addConstraintsToView:item.contentViewController.view forIndex:index];
+            [self addConstraintsToView:item.contentViewController.view forIndex:willToIndex];
         }
+    }
+    
+    if (self.showTabPageBar) {
+        [self.tabPageBar onScrollingToIndex:willToIndex progress:(factor - self.selectedIndex)];
     }
 }
 

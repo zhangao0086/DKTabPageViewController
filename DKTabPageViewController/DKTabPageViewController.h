@@ -7,6 +7,16 @@
 //
 
 #import <UIKit/UIKit.h>
+@class DKTabPageBar;
+
+////////////////////////////////////////////////////////////////////////////////
+
+@protocol DKTabPageBarAnimationDelegate <NSObject>
+
+- (void)tabPageBar:(DKTabPageBar *)tabPageBar scrollingFromButton:(UIButton *)fromButton
+          toButton:(UIButton *)toButton progress:(CGFloat)progress;
+
+@end
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -50,12 +60,18 @@
  */
 @property (nonatomic, strong) UIFont *titleFont UI_APPEARANCE_SELECTOR;
 
+@property (nonatomic, copy) UIColor *titleColor UI_APPEARANCE_SELECTOR;
+
+@property (nonatomic, copy) UIColor *selectedTitleColor UI_APPEARANCE_SELECTOR;
+
 /**
  *  The selection indicator is draw on bottom of the tab bar.
  */
 @property (nonatomic, strong) UIView *selectionIndicatorView;
 
-@property(nonatomic, copy) UIColor *backgroundColor UI_APPEARANCE_SELECTOR;
+@property (nonatomic, copy) UIColor *backgroundColor UI_APPEARANCE_SELECTOR;
+
+@property (nonatomic, assign) id<DKTabPageBarAnimationDelegate> delegate;
 
 @end
 
