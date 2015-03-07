@@ -10,7 +10,7 @@
 #import "DKTabPageViewController.h"
 #import "TableViewController.h"
 
-@interface ViewController () <DKTabPageBarAnimationDelegate>
+@interface ViewController ()
 
 @end
 
@@ -37,9 +37,33 @@
     [items addObject:[DKTabPageButtonItem tabPageItemWithButton:extraButton]];
     
     DKTabPageViewController *tabPageViewController = [[DKTabPageViewController alloc] initWithItems:items];
-    tabPageViewController.tabPageBar.delegate = self;
     [self addChildViewController:tabPageViewController];
     [self.view addSubview:tabPageViewController.view];
+    
+    __weak DKTabPageViewController *weakTabPageController = tabPageViewController;
+    [tabPageViewController setTabPageBarAnimationBlock:^(UIButton *fromButton, UIButton *toButton, CGFloat progress) {
+        CGFloat pointSize = weakTabPageController.tabPageBar.titleFont.pointSize;
+        CGFloat selectedPointSize = 18;
+        
+        fromButton.titleLabel.font = [UIFont systemFontOfSize:pointSize + (selectedPointSize - pointSize) * (1 - progress)];
+        toButton.titleLabel.font = [UIFont systemFontOfSize:pointSize + (selectedPointSize - pointSize) * progress];
+        
+        CGFloat red, green, blue;
+        [weakTabPageController.tabPageBar.titleColor getRed:&red green:&green blue:&blue alpha:NULL];
+        
+        CGFloat selectedRed, selectedGreen, selectedBlue;
+        [weakTabPageController.tabPageBar.selectedTitleColor getRed:&selectedRed green:&selectedGreen blue:&selectedBlue alpha:NULL];
+        
+        [fromButton setTitleColor:[UIColor colorWithRed:red + (selectedRed - red) * (1 - progress)
+                                                  green:green + (selectedGreen - green) * (1 - progress)
+                                                   blue: blue + (selectedBlue - blue) * (1 - progress)
+                                                  alpha:1] forState:UIControlStateSelected];
+        
+        [toButton setTitleColor:[UIColor colorWithRed:red + (selectedRed - red) * progress
+                                                green:green + (selectedGreen - green) * progress
+                                                 blue:blue + (selectedBlue - blue) * progress
+                                                alpha:1] forState:UIControlStateNormal];
+    }];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -56,14 +80,14 @@
      show];
 }
 
-#pragma mark - DKTabPageBarAnimationDelegate methods
-
-- (void)tabPageBar:(DKTabPageBar *)tabPageBar scrollingFromButton:(UIButton *)fromButton toButton:(UIButton *)toButton progress:(CGFloat)progress {
-    CGFloat fontSize = tabPageBar.titleFont.pointSize;
-    CGFloat selectedFontSize = 18;
-    
-//    toButton.titleLabel.font = [UIFont systemFontOfSize:fontSize + (selectedFontSize - fontSize) * progress];
-//    NSLog(@"progress: %f",progress);
-}
+//#pragma mark - DKTabPageBarAnimationDelegate methods
+//
+//- (void)tabPageBar:(DKTabPageBar *)tabPageBar scrollingFromButton:(UIButton *)fromButton toButton:(UIButton *)toButton progress:(CGFloat)progress {
+//    CGFloat fontSize = tabPageBar.titleFont.pointSize;
+//    CGFloat selectedFontSize = 18;
+//    
+////    toButton.titleLabel.font = [UIFont systemFontOfSize:fontSize + (selectedFontSize - fontSize) * progress];
+////    NSLog(@"progress: %f",progress);
+//}
 
 @end

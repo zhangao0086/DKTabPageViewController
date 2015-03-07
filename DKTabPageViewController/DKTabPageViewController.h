@@ -10,13 +10,13 @@
 @class DKTabPageBar;
 
 ////////////////////////////////////////////////////////////////////////////////
-
-@protocol DKTabPageBarAnimationDelegate <NSObject>
-
-- (void)tabPageBar:(DKTabPageBar *)tabPageBar scrollingFromButton:(UIButton *)fromButton
-          toButton:(UIButton *)toButton progress:(CGFloat)progress;
-
-@end
+//
+//@protocol DKTabPageBarAnimationDelegate <NSObject>
+//
+//- (void)tabPageBar:(DKTabPageBar *)tabPageBar scrollingFromButton:(UIButton *)fromButton
+//          toButton:(UIButton *)toButton progress:(CGFloat)progress;
+//
+//@end
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -70,8 +70,8 @@
 @property (nonatomic, strong) UIView *selectionIndicatorView;
 
 @property (nonatomic, copy) UIColor *backgroundColor UI_APPEARANCE_SELECTOR;
-
-@property (nonatomic, assign) id<DKTabPageBarAnimationDelegate> delegate;
+//
+//@property (nonatomic, assign) id<DKTabPageBarAnimationDelegate> delegate;
 
 @end
 
@@ -100,5 +100,7 @@
  *  The block to be executed on the page changed.
  */
 @property (nonatomic, copy) void (^pageChangedBlock)(NSInteger selectedIndex);
+
+@property (nonatomic, copy) void (^tabPageBarAnimationBlock)(UIButton *fromButton, UIButton *toButton, CGFloat progress);
 
 @end
