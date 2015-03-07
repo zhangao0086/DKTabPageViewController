@@ -188,6 +188,9 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
 }
 
 - (void)setSelectedIndex:(NSInteger)selectedIndex {
+    if (self.previousSelectedIndex == selectedIndex) {
+        return;
+    }
     _selectedIndex = selectedIndex;
 
     UIButton *selectedButton = [self.items[_selectedIndex] button];
@@ -587,6 +590,8 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
         if (self.pageChangedBlock && previousSelectedIndex != newIndex) {
             self.pageChangedBlock(newIndex);
         }
+        
+        self.tabPageBar.selectedIndex = newIndex;
         
         if (selectedItem.contentViewController.view.superview == nil) {
             [self.mainScrollView addSubview:selectedItem.contentViewController.view];
