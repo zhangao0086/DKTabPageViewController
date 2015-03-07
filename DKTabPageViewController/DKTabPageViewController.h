@@ -10,15 +10,6 @@
 @class DKTabPageBar;
 
 ////////////////////////////////////////////////////////////////////////////////
-//
-//@protocol DKTabPageBarAnimationDelegate <NSObject>
-//
-//- (void)tabPageBar:(DKTabPageBar *)tabPageBar scrollingFromButton:(UIButton *)fromButton
-//          toButton:(UIButton *)toButton progress:(CGFloat)progress;
-//
-//@end
-
-////////////////////////////////////////////////////////////////////////////////
 
 @interface DKTabPageItem : NSObject
 
@@ -70,8 +61,6 @@
 @property (nonatomic, strong) UIView *selectionIndicatorView;
 
 @property (nonatomic, copy) UIColor *backgroundColor UI_APPEARANCE_SELECTOR;
-//
-//@property (nonatomic, assign) id<DKTabPageBarAnimationDelegate> delegate;
 
 @end
 
@@ -101,6 +90,9 @@
  */
 @property (nonatomic, copy) void (^pageChangedBlock)(NSInteger selectedIndex);
 
+/**
+ *  The block to be executed on the selectionIndicatorView of the tab bar in scrolling.
+ */
 @property (nonatomic, copy) void (^tabPageBarAnimationBlock)(UIButton *fromButton, UIButton *toButton, CGFloat progress);
 
 @end
