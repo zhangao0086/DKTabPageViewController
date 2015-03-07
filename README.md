@@ -7,10 +7,10 @@ DKTabPageViewController is an UIViewController subclass that support for multipl
 
 ----
 
-** 01.18.2015 - Update: **  
-** 1.0.0**: Adding support for iOS 6.
+**01.18.2015 - Update: **  
+**1.0.0**: Adding support for iOS 6.
 
-** Will to do: **  
+**Will to do: **  
 * Scrollable top bar.
 
 ## How To Get Started
