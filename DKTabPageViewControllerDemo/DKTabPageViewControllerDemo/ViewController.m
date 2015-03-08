@@ -37,6 +37,7 @@
     [items addObject:[DKTabPageButtonItem tabPageItemWithButton:extraButton]];
     
     DKTabPageViewController *tabPageViewController = [[DKTabPageViewController alloc] initWithItems:items];
+//    tabPageViewController.showTabPageBar = NO;
     [self addChildViewController:tabPageViewController];
     [self.view addSubview:tabPageViewController.view];
     

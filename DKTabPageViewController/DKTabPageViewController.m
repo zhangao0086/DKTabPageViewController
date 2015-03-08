@@ -396,9 +396,11 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
 - (void)viewWillLayoutSubviews {
     [super viewWillLayoutSubviews];
     
-    CGRect tabPageBarFrame = self.tabPageBar.frame;
-    tabPageBarFrame.size.width = CGRectGetWidth(self.view.bounds);
-    self.tabPageBar.frame = tabPageBarFrame;
+    if (self.showTabPageBar) {
+        CGRect tabPageBarFrame = self.tabPageBar.frame;
+        tabPageBarFrame.size.width = CGRectGetWidth(self.view.bounds);
+        self.tabPageBar.frame = tabPageBarFrame;        
+    }
 }
 
 /**
@@ -502,10 +504,17 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
                                                                       metrics:nil
                                                                         views:@{@"scrollView" : mainScrollView}]];
     
-    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[tabPageBar]-0-[scrollView]-0-|"
-                                                                      options:NSLayoutFormatDirectionLeadingToTrailing
-                                                                      metrics:nil
-                                                                        views:@{@"scrollView" : mainScrollView, @"tabPageBar" : self.tabPageBar}]];
+    if (self.showTabPageBar) {
+        [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[tabPageBar]-0-[scrollView]-0-|"
+                                                                          options:NSLayoutFormatDirectionLeadingToTrailing
+                                                                          metrics:nil
+                                                                            views:@{@"scrollView" : mainScrollView, @"tabPageBar" : self.tabPageBar}]];
+    } else {
+        [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[scrollView]-0-|"
+                                                                          options:NSLayoutFormatDirectionLeadingToTrailing
+                                                                          metrics:nil
+                                                                            views:@{@"scrollView" : mainScrollView}]];
+    }
     self.mainScrollView = mainScrollView;
 }
 
@@ -591,7 +600,9 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
             self.pageChangedBlock(newIndex);
         }
         
-        self.tabPageBar.selectedIndex = newIndex;
+        if (self.showTabPageBar) {
+            self.tabPageBar.selectedIndex = newIndex;
+        }
         
         if (selectedItem.contentViewController.view.superview == nil) {
             [self.mainScrollView addSubview:selectedItem.contentViewController.view];
@@ -609,9 +620,9 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
     CGFloat factor = contentOffset.x / CGRectGetWidth(scrollView.bounds);
     
     NSInteger willToIndex = -1;
-    if (factor > self.tabPageBar.selectedIndex) {
+    if (factor > (self.showTabPageBar ? self.tabPageBar.selectedIndex : self.selectedIndex)) {
         willToIndex = ceil(factor);
-    } else if (factor < self.tabPageBar.selectedIndex) {
+    } else if (factor < (self.showTabPageBar ? self.tabPageBar.selectedIndex : self.selectedIndex)) {
         willToIndex = floor(factor);
     }
 
