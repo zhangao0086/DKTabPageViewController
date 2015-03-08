@@ -42,12 +42,15 @@
     
     __weak DKTabPageViewController *weakTabPageController = tabPageViewController;
     [tabPageViewController setTabPageBarAnimationBlock:^(UIButton *fromButton, UIButton *toButton, CGFloat progress) {
+        
+        // animated font
         CGFloat pointSize = weakTabPageController.tabPageBar.titleFont.pointSize;
         CGFloat selectedPointSize = 18;
         
         fromButton.titleLabel.font = [UIFont systemFontOfSize:pointSize + (selectedPointSize - pointSize) * (1 - progress)];
         toButton.titleLabel.font = [UIFont systemFontOfSize:pointSize + (selectedPointSize - pointSize) * progress];
         
+        // animated text color
         CGFloat red, green, blue;
         [weakTabPageController.tabPageBar.titleColor getRed:&red green:&green blue:&blue alpha:NULL];
         
