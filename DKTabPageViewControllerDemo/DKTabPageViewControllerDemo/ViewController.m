@@ -29,7 +29,6 @@
         [items addObject:item];
     }
     
-    
     // add extra button
     UIButton *extraButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [extraButton setTitle:@"Extra" forState:UIControlStateNormal];
@@ -37,8 +36,36 @@
     [items addObject:[DKTabPageButtonItem tabPageItemWithButton:extraButton]];
     
     DKTabPageViewController *tabPageViewController = [[DKTabPageViewController alloc] initWithItems:items];
+//    tabPageViewController.showTabPageBar = NO;
     [self addChildViewController:tabPageViewController];
     [self.view addSubview:tabPageViewController.view];
+    
+    [tabPageViewController setTabPageBarAnimationBlock:^(DKTabPageViewController *weakTabPageViewController, UIButton *fromButton, UIButton *toButton, CGFloat progress) {
+        
+        // animated font
+        CGFloat pointSize = weakTabPageViewController.tabPageBar.titleFont.pointSize;
+        CGFloat selectedPointSize = 18;
+        
+        fromButton.titleLabel.font = [UIFont systemFontOfSize:pointSize + (selectedPointSize - pointSize) * (1 - progress)];
+        toButton.titleLabel.font = [UIFont systemFontOfSize:pointSize + (selectedPointSize - pointSize) * progress];
+        
+        // animated text color
+        CGFloat red, green, blue;
+        [weakTabPageViewController.tabPageBar.titleColor getRed:&red green:&green blue:&blue alpha:NULL];
+        
+        CGFloat selectedRed, selectedGreen, selectedBlue;
+        [weakTabPageViewController.tabPageBar.selectedTitleColor getRed:&selectedRed green:&selectedGreen blue:&selectedBlue alpha:NULL];
+        
+        [fromButton setTitleColor:[UIColor colorWithRed:red + (selectedRed - red) * (1 - progress)
+                                                  green:green + (selectedGreen - green) * (1 - progress)
+                                                   blue: blue + (selectedBlue - blue) * (1 - progress)
+                                                  alpha:1] forState:UIControlStateSelected];
+        
+        [toButton setTitleColor:[UIColor colorWithRed:red + (selectedRed - red) * progress
+                                                green:green + (selectedGreen - green) * progress
+                                                 blue:blue + (selectedBlue - blue) * progress
+                                                alpha:1] forState:UIControlStateNormal];
+    }];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -47,8 +74,22 @@
 }
 
 - (IBAction)extraButtonClicked:(id)sender {
-    [[[UIAlertView alloc] initWithTitle:@"" message:@"This is a extra button" delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles: nil]
+    [[[UIAlertView alloc] initWithTitle:@""
+                                message:@"This is a extra button"
+                               delegate:nil
+                      cancelButtonTitle:@"Cancel"
+                      otherButtonTitles: nil]
      show];
 }
+
+//#pragma mark - DKTabPageBarAnimationDelegate methods
+//
+//- (void)tabPageBar:(DKTabPageBar *)tabPageBar scrollingFromButton:(UIButton *)fromButton toButton:(UIButton *)toButton progress:(CGFloat)progress {
+//    CGFloat fontSize = tabPageBar.titleFont.pointSize;
+//    CGFloat selectedFontSize = 18;
+//    
+////    toButton.titleLabel.font = [UIFont systemFontOfSize:fontSize + (selectedFontSize - fontSize) * progress];
+////    NSLog(@"progress: %f",progress);
+//}
 
 @end

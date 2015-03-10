@@ -2,13 +2,25 @@
 ![GIF](https://raw.githubusercontent.com/zhangao0086/DKTabPageViewController/master/preview1.gif)
 ![GIF](https://raw.githubusercontent.com/zhangao0086/DKTabPageViewController/master/preview2.gif)
 ![GIF](https://raw.githubusercontent.com/zhangao0086/DKTabPageViewController/master/preview3.gif)
+#### custom animation to text of the top bar
+![GIF](https://raw.githubusercontent.com/zhangao0086/DKTabPageViewController/1.2.0/preview4.gif)
+#### the top bar is hidden
+![GIF](https://raw.githubusercontent.com/zhangao0086/DKTabPageViewController/1.2.0/preview5.gif)
 ## Overview
-DKTabPageViewController is an UIViewController subclass that support for multiple tab and gestures. Each tab represents a ViewController instance, independent of each other. View supports lazy loading and response viewWillAppear、viewWillDisappear etc methods.
+DKTabPageViewController is an UIViewController subclass that support for multiple tab and gestures. Each tab represents a ViewController instance, independent of each other. View supports lazy loading and response viewWillAppear、viewWillDisappear etc methods. Adding support for custom animation to text of the top bar.
 
 ----
 
-**01.18.2015 - Update:**  
-**1.0.0**: Adding support for iOS 6.
+**v1.0.0 - 01.18.2015:**  
+* Adding support for iOS 6.  
+
+**v1.2.0 - 03.08.2015:**  
+* Improved performance.
+* Adding support for custom animation to text of the top bar.
+
+#### Will to do:
+* Adding support for loaded from xib(storyboard).
+* Adding support for scrollable on the top bar.
 
 ## How To Get Started
 
@@ -35,7 +47,7 @@ DKTabPageViewController *tabPageViewController = [[DKTabPageViewController alloc
 [self.view addSubview:tabPageViewController.view];
 ```
 
-### Flexible and easy to use interface
+#### Flexible and easy to use interface
 
 ``` objective-c
 @property (nonatomic, assign) NSInteger selectedIndex;
@@ -57,7 +69,7 @@ DKTabPageViewController *tabPageViewController = [[DKTabPageViewController alloc
 @property (nonatomic, copy) void (^pageChangedBlock)(NSInteger selectedIndex);
 ```
 
-### Customizable Tab Bar
+#### Customizable the top bar
 
 ``` objective-c
 /**
@@ -76,6 +88,38 @@ DKTabPageViewController *tabPageViewController = [[DKTabPageViewController alloc
 @property (nonatomic, strong) UIView *selectionIndicatorView;
 
 @property(nonatomic, copy) UIColor *backgroundColor UI_APPEARANCE_SELECTOR;
+```
+
+#### Custom scrolling animation of the top bar(as demo)
+
+```objective-c
+__weak DKTabPageViewController *weakTabPageController = tabPageViewController;
+[tabPageViewController setTabPageBarAnimationBlock:^(UIButton *fromButton, UIButton *toButton, CGFloat progress) {
+    
+    // animated font
+    CGFloat pointSize = weakTabPageController.tabPageBar.titleFont.pointSize;
+    CGFloat selectedPointSize = 18;
+    
+    fromButton.titleLabel.font = [UIFont systemFontOfSize:pointSize + (selectedPointSize - pointSize) * (1 - progress)];
+    toButton.titleLabel.font = [UIFont systemFontOfSize:pointSize + (selectedPointSize - pointSize) * progress];
+    
+    // animated text color
+    CGFloat red, green, blue;
+    [weakTabPageController.tabPageBar.titleColor getRed:&red green:&green blue:&blue alpha:NULL];
+    
+    CGFloat selectedRed, selectedGreen, selectedBlue;
+    [weakTabPageController.tabPageBar.selectedTitleColor getRed:&selectedRed green:&selectedGreen blue:&selectedBlue alpha:NULL];
+    
+    [fromButton setTitleColor:[UIColor colorWithRed:red + (selectedRed - red) * (1 - progress)
+                                              green:green + (selectedGreen - green) * (1 - progress)
+                                               blue: blue + (selectedBlue - blue) * (1 - progress)
+                                              alpha:1] forState:UIControlStateSelected];
+    
+    [toButton setTitleColor:[UIColor colorWithRed:red + (selectedRed - red) * progress
+                                            green:green + (selectedGreen - green) * progress
+                                             blue:blue + (selectedBlue - blue) * progress
+                                            alpha:1] forState:UIControlStateNormal];
+}];
 ```
 
 ## License

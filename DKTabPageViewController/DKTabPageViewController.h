@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+@class DKTabPageBar;
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -50,16 +51,23 @@
  */
 @property (nonatomic, strong) UIFont *titleFont UI_APPEARANCE_SELECTOR;
 
+@property (nonatomic, copy) UIColor *titleColor UI_APPEARANCE_SELECTOR;
+
+@property (nonatomic, copy) UIColor *selectedTitleColor UI_APPEARANCE_SELECTOR;
+
 /**
  *  The selection indicator is draw on bottom of the tab bar.
  */
 @property (nonatomic, strong) UIView *selectionIndicatorView;
 
-@property(nonatomic, copy) UIColor *backgroundColor UI_APPEARANCE_SELECTOR;
+@property (nonatomic, copy) UIColor *backgroundColor UI_APPEARANCE_SELECTOR;
 
 @end
 
 ////////////////////////////////////////////////////////////////////////////////
+@class DKTabPageViewController;
+
+typedef void(^TabPageBarAnimationBlock)(DKTabPageViewController *weakTabPageViewController, UIButton *fromButton, UIButton *toButton, CGFloat progress);
 
 @interface DKTabPageViewController : UIViewController
 
@@ -84,5 +92,10 @@
  *  The block to be executed on the page changed.
  */
 @property (nonatomic, copy) void (^pageChangedBlock)(NSInteger selectedIndex);
+
+/**
+ *  The block to be executed on the selectionIndicatorView of the tab bar in scrolling.
+ */
+@property (nonatomic, copy) TabPageBarAnimationBlock tabPageBarAnimationBlock;
 
 @end
