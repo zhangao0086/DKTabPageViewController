@@ -19,7 +19,8 @@ DKTabPageViewController is an UIViewController subclass that support for multipl
 * Adding support for custom animation to text of the top bar.
 
 #### Will to do:
-* Adding supports for scrollable on the top bar.
+* Adding support for loaded from xib(storyboard).
+* Adding support for scrollable on the top bar.
 
 ## How To Get Started
 
