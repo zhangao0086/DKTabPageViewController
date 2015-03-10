@@ -65,6 +65,9 @@
 @end
 
 ////////////////////////////////////////////////////////////////////////////////
+@class DKTabPageViewController;
+
+typedef void(^TabPageBarAnimationBlock)(DKTabPageViewController *weakTabPageViewController, UIButton *fromButton, UIButton *toButton, CGFloat progress);
 
 @interface DKTabPageViewController : UIViewController
 
@@ -93,6 +96,6 @@
 /**
  *  The block to be executed on the selectionIndicatorView of the tab bar in scrolling.
  */
-@property (nonatomic, copy) void (^tabPageBarAnimationBlock)(UIButton *fromButton, UIButton *toButton, CGFloat progress);
+@property (nonatomic, copy) TabPageBarAnimationBlock tabPageBarAnimationBlock;
 
 @end

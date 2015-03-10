@@ -192,7 +192,7 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
         return;
     }
     _selectedIndex = selectedIndex;
-
+    
     UIButton *selectedButton = [self.items[_selectedIndex] button];
     selectedButton.selected = YES;
     [self setupButtonStyleForButton:selectedButton];
@@ -252,7 +252,7 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
     [UIView beginAnimations:nil context:nil];
     [self setupSelectionIndicatorView];
     [UIView commitAnimations];
-
+    
     if (self.tabChangedBlock) {
         self.tabChangedBlock(self.selectedIndex);
     }
@@ -399,7 +399,7 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
     if (self.showTabPageBar) {
         CGRect tabPageBarFrame = self.tabPageBar.frame;
         tabPageBarFrame.size.width = CGRectGetWidth(self.view.bounds);
-        self.tabPageBar.frame = tabPageBarFrame;        
+        self.tabPageBar.frame = tabPageBarFrame;
     }
 }
 
@@ -448,7 +448,7 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
 
 #pragma mark - Methods
 
-- (void)setTabPageBarAnimationBlock:(void (^)(UIButton *, UIButton *, CGFloat))tabPageBarAnimationBlock {
+- (void)setTabPageBarAnimationBlock:(TabPageBarAnimationBlock)tabPageBarAnimationBlock {
     _tabPageBarAnimationBlock = tabPageBarAnimationBlock;
     
     if (self.tabPageBar.layer.contents != nil) {
@@ -472,9 +472,9 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
             if (weakSelf.tabPageBarAnimationBlock) {
                 DKTabPageItem *selectedItem = weakSelf.items[weakSelf.selectedIndex];
                 DKTabPageItem *willToSelectItem = weakSelf.items[selectedIndex];
-                weakSelf.tabPageBarAnimationBlock(selectedItem == willToSelectItem ? nil : selectedItem.button, willToSelectItem.button, 1);
+                weakSelf.tabPageBarAnimationBlock(weakSelf, selectedItem == willToSelectItem ? nil : selectedItem.button, willToSelectItem.button, 1);
             }
-
+            
             weakSelf.selectedIndex = selectedIndex;
         }];
         [self.view addSubview:self.tabPageBar];
@@ -625,8 +625,12 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
     } else if (factor < (self.showTabPageBar ? self.tabPageBar.selectedIndex : self.selectedIndex)) {
         willToIndex = floor(factor);
     }
-
-    if (willToIndex != -1 && willToIndex < self.childViewControllers.count) {
+    
+    if (willToIndex == -1 || willToIndex >= self.childViewControllers.count) {
+        willToIndex = NSNotFound;
+    }
+    
+    if (willToIndex != NSNotFound) {
         DKTabPageViewControllerItem *item = self.items[willToIndex];
         if (item.contentViewController.view.superview == nil) {
             [self.mainScrollView addSubview:item.contentViewController.view];
@@ -636,21 +640,22 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
     
     if (self.showTabPageBar && (scrollView.isDecelerating || scrollView.isDragging)) {
         if (self.tabPageBarAnimationBlock) {
+            __weak DKTabPageViewController *weakSelf = self;
             CGFloat progress = ABS(factor - self.tabPageBar.selectedIndex);
             if (progress >= 1.00) {
                 progress -= 1.00;
                 self.tabPageBar.selectedIndex = round(factor);
-                self.tabPageBarAnimationBlock(nil, [self.items[self.tabPageBar.selectedIndex] button], 1);
+                self.tabPageBarAnimationBlock(weakSelf, nil, [self.items[self.tabPageBar.selectedIndex] button], 1);
             } else {
                 DKTabPageItem *selectedItem = self.items[self.tabPageBar.selectedIndex];
                 DKTabPageItem *willToSelectItem;
-                if (willToIndex != -1) {
+                if (willToIndex != NSNotFound) {
                     willToSelectItem = self.items[willToIndex];
                     if (![willToSelectItem isKindOfClass:[DKTabPageViewControllerItem class]]) {
                         willToSelectItem = nil;
                     }
                 }
-                self.tabPageBarAnimationBlock(selectedItem.button, willToSelectItem.button, progress);
+                self.tabPageBarAnimationBlock(weakSelf, selectedItem.button, willToSelectItem.button, progress);
             }
         }
         [self.tabPageBar onScrollingForOffsetFactor:factor];

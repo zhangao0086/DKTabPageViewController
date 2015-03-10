@@ -41,11 +41,10 @@
     [self addChildViewController:tabPageViewController];
     [self.view addSubview:tabPageViewController.view];
     
-    __weak DKTabPageViewController *weakTabPageController = tabPageViewController;
-    [tabPageViewController setTabPageBarAnimationBlock:^(UIButton *fromButton, UIButton *toButton, CGFloat progress) {
+    [tabPageViewController setTabPageBarAnimationBlock:^(DKTabPageViewController *weakTabPageViewController, UIButton *fromButton, UIButton *toButton, CGFloat progress) {
         
         // animated font
-        CGFloat pointSize = weakTabPageController.tabPageBar.titleFont.pointSize;
+        CGFloat pointSize = weakTabPageViewController.tabPageBar.titleFont.pointSize;
         CGFloat selectedPointSize = 18;
         
         fromButton.titleLabel.font = [UIFont systemFontOfSize:pointSize + (selectedPointSize - pointSize) * (1 - progress)];
@@ -53,10 +52,10 @@
         
         // animated text color
         CGFloat red, green, blue;
-        [weakTabPageController.tabPageBar.titleColor getRed:&red green:&green blue:&blue alpha:NULL];
+        [weakTabPageViewController.tabPageBar.titleColor getRed:&red green:&green blue:&blue alpha:NULL];
         
         CGFloat selectedRed, selectedGreen, selectedBlue;
-        [weakTabPageController.tabPageBar.selectedTitleColor getRed:&selectedRed green:&selectedGreen blue:&selectedBlue alpha:NULL];
+        [weakTabPageViewController.tabPageBar.selectedTitleColor getRed:&selectedRed green:&selectedGreen blue:&selectedBlue alpha:NULL];
         
         [fromButton setTitleColor:[UIColor colorWithRed:red + (selectedRed - red) * (1 - progress)
                                                   green:green + (selectedGreen - green) * (1 - progress)
