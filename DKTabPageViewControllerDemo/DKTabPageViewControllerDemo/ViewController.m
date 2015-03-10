@@ -29,7 +29,6 @@
         [items addObject:item];
     }
     
-    
     // add extra button
     UIButton *extraButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [extraButton setTitle:@"Extra" forState:UIControlStateNormal];
