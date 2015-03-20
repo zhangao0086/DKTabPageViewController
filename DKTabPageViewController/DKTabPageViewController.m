@@ -581,11 +581,11 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
 }
 
 - (void)cleanupSubviews {
-    if (self.previousSelectedIndex == self.selectedIndex) {
-        return;
+    for (UIView *subview in self.mainScrollView.subviews) {
+        if (subview != self.selectedViewController.view) {
+            [subview removeFromSuperview];
+        }
     }
-    DKTabPageViewControllerItem *previousSelectedItem = self.items[self.previousSelectedIndex];
-    [previousSelectedItem.contentViewController.view removeFromSuperview];
 }
 
 - (void)setSelectedIndexByIndex:(NSInteger)newIndex{
