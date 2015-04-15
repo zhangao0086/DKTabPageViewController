@@ -4,13 +4,13 @@
 ![GIF](https://raw.githubusercontent.com/zhangao0086/DKTabPageViewController/master/preview3.gif)
 
 #### custom animation to text of the top bar
-![GIF](https://raw.githubusercontent.com/zhangao0086/DKTabPageViewController/1.2.0/preview4.gif)
+![GIF](https://raw.githubusercontent.com/zhangao0086/DKTabPageViewController/master/preview4.gif)
 
 #### the top bar is hidden
-![GIF](https://raw.githubusercontent.com/zhangao0086/DKTabPageViewController/1.2.0/preview5.gif)
+![GIF](https://raw.githubusercontent.com/zhangao0086/DKTabPageViewController/master/preview5.gif)
 
 #### support visual effects.
-![GIF](https://raw.githubusercontent.com/zhangao0086/DKTabPageViewController/1.2.0/preview6.png)
+![GIF](https://raw.githubusercontent.com/zhangao0086/DKTabPageViewController/master/preview6.png)
 
 ## Overview
 DKTabPageViewController is an UIViewController subclass that support for multiple tab and gestures. Each tab represents a ViewController instance, independent of each other. View supports lazy loading and response viewWillAppear、viewWillDisappear etc methods. Adding support for custom animation to text of the top bar.
