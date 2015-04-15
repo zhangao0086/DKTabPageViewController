@@ -37,6 +37,7 @@
     
     DKTabPageViewController *tabPageViewController = [[DKTabPageViewController alloc] initWithItems:items];
 //    tabPageViewController.showTabPageBar = NO;
+    tabPageViewController.contentInsets = UIEdgeInsetsMake(44, 0, 0, 0);
     [self addChildViewController:tabPageViewController];
     [self.view addSubview:tabPageViewController.view];
     
@@ -81,15 +82,5 @@
                       otherButtonTitles: nil]
      show];
 }
-
-//#pragma mark - DKTabPageBarAnimationDelegate methods
-//
-//- (void)tabPageBar:(DKTabPageBar *)tabPageBar scrollingFromButton:(UIButton *)fromButton toButton:(UIButton *)toButton progress:(CGFloat)progress {
-//    CGFloat fontSize = tabPageBar.titleFont.pointSize;
-//    CGFloat selectedFontSize = 18;
-//    
-////    toButton.titleLabel.font = [UIFont systemFontOfSize:fontSize + (selectedFontSize - fontSize) * progress];
-////    NSLog(@"progress: %f",progress);
-//}
 
 @end

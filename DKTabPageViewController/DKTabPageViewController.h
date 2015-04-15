@@ -60,8 +60,6 @@
  */
 @property (nonatomic, strong) UIView *selectionIndicatorView;
 
-@property (nonatomic, copy) UIColor *backgroundColor UI_APPEARANCE_SELECTOR;
-
 @end
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -82,6 +80,11 @@ typedef void(^TabPageBarAnimationBlock)(DKTabPageViewController *weakTabPageView
  *  Whether show the Tab Bar. Defaults to YES.
  */
 @property (nonatomic, assign) BOOL showTabPageBar;
+
+/**
+ *  Add additional scroll area around content when contentViewController of view is UIScrollview of subclasses.
+ */
+@property (nonatomic, assign) UIEdgeInsets contentInsets;
 
 /**
  *  Whether allow scroll gestures. Defaults to YES.
