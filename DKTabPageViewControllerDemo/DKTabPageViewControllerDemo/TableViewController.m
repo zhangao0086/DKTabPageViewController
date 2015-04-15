@@ -40,6 +40,12 @@
     
     cell.textLabel.text = [NSString stringWithFormat:@"Row %zd",indexPath.row];
 
+    if (indexPath.row % 2 == 0) {
+        cell.backgroundColor = [UIColor redColor];
+    } else {
+        cell.backgroundColor = [UIColor yellowColor];
+    }
+    
     return cell;
 }
 

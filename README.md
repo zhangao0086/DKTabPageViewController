@@ -2,21 +2,31 @@
 ![GIF](https://raw.githubusercontent.com/zhangao0086/DKTabPageViewController/master/preview1.gif)
 ![GIF](https://raw.githubusercontent.com/zhangao0086/DKTabPageViewController/master/preview2.gif)
 ![GIF](https://raw.githubusercontent.com/zhangao0086/DKTabPageViewController/master/preview3.gif)
+
 #### custom animation to text of the top bar
 ![GIF](https://raw.githubusercontent.com/zhangao0086/DKTabPageViewController/1.2.0/preview4.gif)
+
 #### the top bar is hidden
 ![GIF](https://raw.githubusercontent.com/zhangao0086/DKTabPageViewController/1.2.0/preview5.gif)
+
+#### support visual effects.
+![GIF](https://raw.githubusercontent.com/zhangao0086/DKTabPageViewController/1.2.0/preview6.png)
+
 ## Overview
 DKTabPageViewController is an UIViewController subclass that support for multiple tab and gestures. Each tab represents a ViewController instance, independent of each other. View supports lazy loading and response viewWillAppear、viewWillDisappear etc methods. Adding support for custom animation to text of the top bar.
 
 ----
 
-**v1.0.0 - 01.18.2015:**  
-* Adding support for iOS 6.  
+**v1.3.0 - 04.15.2015:**  
+* Add supports for visual effects.
 
 **v1.2.0 - 03.08.2015:**  
 * Improved performance.
 * Adding support for custom animation to text of the top bar.
+
+**v1.0.0 - 01.18.2015:**  
+* Adding support for iOS 6.  
+
 
 #### Will to do:
 * Adding support for loaded from xib(storyboard).
@@ -72,6 +82,11 @@ DKTabPageViewController *tabPageViewController = [[DKTabPageViewController alloc
 @property (nonatomic, assign) BOOL showTabPageBar;
 
 /**
+ *  Add additional scroll area around content when contentViewController of view is UIScrollview of subclasses.
+ */
+@property (nonatomic, assign) UIEdgeInsets contentInsets;
+
+/**
  *  Whether allow scroll gestures. Defaults to YES.
  */
 @property (nonatomic, assign) BOOL gestureScrollEnabled;
@@ -100,7 +115,7 @@ DKTabPageViewController *tabPageViewController = [[DKTabPageViewController alloc
  */
 @property (nonatomic, strong) UIView *selectionIndicatorView;
 
-@property(nonatomic, copy) UIColor *backgroundColor UI_APPEARANCE_SELECTOR;
+@property(nonatomic, copy) UIColor *backgroundColor UI_APPEARANCE_SELECTOR; // Removed on 1.3.0.
 ```
 
 #### Custom scrolling animation of the top bar(as demo)
