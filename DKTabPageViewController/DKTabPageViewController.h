@@ -81,9 +81,6 @@ typedef void(^TabPageBarAnimationBlock)(DKTabPageViewController *weakTabPageView
  */
 @property (nonatomic, assign) BOOL showTabPageBar;
 
-/**
- *  Add additional scroll area around content when contentViewController of view is UIScrollview of subclasses.
- */
 @property (nonatomic, assign) UIEdgeInsets contentInsets;
 
 /**
