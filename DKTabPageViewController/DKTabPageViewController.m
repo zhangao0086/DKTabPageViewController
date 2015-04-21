@@ -10,6 +10,7 @@
 
 #define DKTABPAGE_RGB_COLOR(r,g,b)                [UIColor colorWithRed:(r)/255.0f green:(g)/255.0f blue:(b)/255.0f alpha:1]
 #define DKTABPAGE_IOS_VERSION_GREATER_THAN_7      ([[[UIDevice currentDevice] systemVersion] intValue] >= 7)
+#define DKTABPAGE_IOS_VERSION_GREATER_THAN_8      ([[[UIDevice currentDevice] systemVersion] intValue] >= 8)
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
@@ -421,6 +422,10 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
  */
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
+    
+    if (DKTABPAGE_IOS_VERSION_GREATER_THAN_8) {
+        return;
+    }
     
     if (!self.mainScrollView.isTracking && !self.mainScrollView.dragging) {
         self.mainScrollView.contentSize = CGSizeMake(CGRectGetWidth(self.mainScrollView.bounds) * self.childViewControllers.count, 0);
