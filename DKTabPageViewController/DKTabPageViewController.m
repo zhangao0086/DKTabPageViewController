@@ -420,19 +420,16 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
     
-    
     if (!self.mainScrollView.isTracking && !self.mainScrollView.dragging) {
         self.mainScrollView.contentSize = CGSizeMake(CGRectGetWidth(self.mainScrollView.bounds) * self.childViewControllers.count, 0);
         self.mainScrollView.contentOffset = CGPointMake(CGRectGetWidth(self.mainScrollView.bounds) * self.selectedIndex, 0);
         
-        if (DKTABPAGE_IOS_VERSION_GREATER_THAN_8) {
-            return;
-        }
-        
         /**
          *  Fixed bugs for content size incorrect when called _resizeWithOldSuperviewSize on iOS 7
          */
-        [self cleanupSubviews];
+        if (!DKTABPAGE_IOS_VERSION_GREATER_THAN_8) {
+            [self cleanupSubviews];
+        }
         
         if (self.selectedViewController) {
             [self.mainScrollView removeConstraints:self.mainScrollView.constraints];
