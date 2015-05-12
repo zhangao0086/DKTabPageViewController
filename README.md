@@ -37,10 +37,10 @@ DKTabPageViewController is an UIViewController subclass that support for multipl
 ``` bash
 $ pod search DKTabPageViewController
 
--> DKTabPageViewController (1.3.2)
+-> DKTabPageViewController (1.3.6)
    DKTabPageViewController is an UIViewController subclass that support for multiple
    tab and gestures.
-   pod 'DKTabPageViewController', '~> 1.3.2'
+   pod 'DKTabPageViewController', '~> 1.3.6'
    - Homepage: https://github.com/zhangao0086/DKTabPageViewController
    - Source:   https://github.com/zhangao0086/DKTabPageViewController.git
    - Versions: 1.2.0, 1.1.0, 1.0.0, 0.0.6, 0.0.5, 0.0.4, 0.0.3, 0.0.2, 0.0.1 [master

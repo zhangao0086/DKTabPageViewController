@@ -679,6 +679,10 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
 
 #pragma mark - UIScrollView delegate methods
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    if (!self.mainScrollView.isDragging && !self.mainScrollView.decelerating) {
+        return;
+    }
+    
     CGPoint contentOffset = scrollView.contentOffset;
     CGFloat factor = contentOffset.x / CGRectGetWidth(scrollView.bounds);
     
