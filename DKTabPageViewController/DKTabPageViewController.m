@@ -85,7 +85,7 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
         [[DKTabPageBar appearance] setTabBarHeight:40];
         [[DKTabPageBar appearance] setTitleFont:[UIFont systemFontOfSize:14]];
         [[DKTabPageBar appearance] setTitleColor:DKTABPAGE_RGB_COLOR(38, 40, 49)];
-        [[DKTabPageBar appearance] setSelectedTitleColor:DKTABPAGE_RGB_COLOR(231, 53, 53)];
+        [[DKTabPageBar appearance] setSelectedTitleColor:DKTABPAGE_RGB_COLOR(255, 99, 99)];
     }
 }
 
@@ -93,7 +93,7 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
     self = [super initWithFrame:frame];
     if (self) {
         UIView *defaultSelectionIndicatorView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 3)];
-        defaultSelectionIndicatorView.backgroundColor = DKTABPAGE_RGB_COLOR(231, 53, 53);
+        defaultSelectionIndicatorView.backgroundColor = DKTABPAGE_RGB_COLOR(255, 99, 99);
         
         self.selectionIndicatorView = defaultSelectionIndicatorView;
         
