@@ -74,8 +74,6 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
 
 @property (nonatomic, copy) void (^tabChangedBlock)(NSInteger selectedIndex);
 
-@property (nonatomic, strong) UIToolbar *backgroundView;
-
 @end
 
 @implementation DKTabPageBar
@@ -86,27 +84,24 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
         [[DKTabPageBar appearance] setTitleFont:[UIFont systemFontOfSize:14]];
         [[DKTabPageBar appearance] setTitleColor:DKTABPAGE_RGB_COLOR(38, 40, 49)];
         [[DKTabPageBar appearance] setSelectedTitleColor:DKTABPAGE_RGB_COLOR(231, 53, 53)];
+        [[DKTabPageBar appearance] setSelectedIndicatorColor:DKTABPAGE_RGB_COLOR(255, 99, 99)];
+        [[DKTabPageBar appearance] setSelectedIndicatorHeight:3.0];
+        [[DKTabPageBar appearance] setShadowColor:DKTABPAGE_RGB_COLOR(208, 208, 208)];
+        [[DKTabPageBar appearance] setBackgroundColor:[UIColor whiteColor]];
     }
 }
 
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        UIView *defaultSelectionIndicatorView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 3)];
-        defaultSelectionIndicatorView.backgroundColor = DKTABPAGE_RGB_COLOR(231, 53, 53);
-        
-        self.selectionIndicatorView = defaultSelectionIndicatorView;
-        
-        self.backgroundColor = [UIColor clearColor];
+        self.selectionIndicatorView = [[UIView alloc] initWithFrame:CGRectZero];
     }
     return self;
 }
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    
-    self.backgroundView.frame = self.bounds;
-    
+
     self.itemSize = CGSizeMake(CGRectGetWidth(self.bounds) / self.items.count, CGRectGetHeight(self.bounds));
     CGFloat currentX = 0;
     for (int i = 0; i < self.items.count; i++) {
@@ -135,11 +130,11 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
 - (void)drawRect:(CGRect)rect {
     [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     
-    UIView *underline = [[UIView alloc] initWithFrame:CGRectMake(0, CGRectGetHeight(self.bounds) - 0.5,
+    UIView *shadow = [[UIView alloc] initWithFrame:CGRectMake(0, CGRectGetHeight(self.bounds) - 0.5,
                                                                  CGRectGetWidth(self.bounds), 0.5)];
-    underline.backgroundColor = DKTABPAGE_RGB_COLOR(208, 208, 208);
-    underline.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
-    [self addSubview:underline];
+    shadow.backgroundColor = self.shadowColor;
+    shadow.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
+    [self addSubview:shadow];
     
     if (self.items.count != 0) {
         CGFloat indicatorWidth = 0;
@@ -185,16 +180,6 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
             self.tabChangedBlock(self.selectedIndex);
         }
     }
-    
-    [self insertSubview:self.backgroundView atIndex:0];
-}
-
-- (UIToolbar *)backgroundView {
-    if (_backgroundView == nil) {
-        _backgroundView = [UIToolbar new];
-        _backgroundView.clipsToBounds = YES;
-    }
-    return _backgroundView;
 }
 
 - (void)setItems:(NSArray *)items {
@@ -249,7 +234,8 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
     CGFloat offset = self.itemSize.width - self.indicatorWidth;
     self.selectionIndicatorView.frame = CGRectMake(self.itemSize.width * self.selectedIndex + offset / 2,
                                                    CGRectGetHeight(self.bounds) - CGRectGetHeight(self.selectionIndicatorView.bounds),
-                                                   self.indicatorWidth, CGRectGetHeight(self.selectionIndicatorView.bounds));
+                                                   self.indicatorWidth, self.selectedIndicatorHeight);
+    self.selectionIndicatorView.backgroundColor = self.selectedIndicatorColor;
 }
 
 - (IBAction)onButtonClicked:(UIButton *)button {

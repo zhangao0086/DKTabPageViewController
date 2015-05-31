@@ -47,6 +47,16 @@
 @property (nonatomic, assign) CGFloat tabBarHeight UI_APPEARANCE_SELECTOR;
 
 /**
+ * Height of the selected indicator. Defaults to 3.
+ */
+@property (nonatomic, assign) CGFloat selectedIndicatorHeight UI_APPEARANCE_SELECTOR;
+
+/**
+ * Color of the selected indicator. Defaults to an orange-red color.
+ */
+@property (nonatomic, copy) UIColor *selectedIndicatorColor UI_APPEARANCE_SELECTOR;
+
+/**
  *  Font of the tab bar. Defautls to [UIFont systemFontOfSize:14].
  */
 @property (nonatomic, strong) UIFont *titleFont UI_APPEARANCE_SELECTOR;
@@ -54,6 +64,11 @@
 @property (nonatomic, copy) UIColor *titleColor UI_APPEARANCE_SELECTOR;
 
 @property (nonatomic, copy) UIColor *selectedTitleColor UI_APPEARANCE_SELECTOR;
+
+/**
+ * Color of the 1 point shadow underline. Defaults to a gray color.
+ */
+@property (nonatomic, copy) UIColor *shadowColor UI_APPEARANCE_SELECTOR;
 
 /**
  *  The selection indicator is draw on bottom of the tab bar.
