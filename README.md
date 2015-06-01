@@ -16,6 +16,8 @@
 DKTabPageViewController is an UIViewController subclass that support for multiple tab and gestures. Each tab represents a ViewController instance, independent of each other. View supports lazy loading and response viewWillAppear、viewWillDisappear etc methods. Adding support for custom animation to text of the top bar.
 
 ----
+**v1.4.0 - 06.01.2015:**  
+* Customized more.
 
 **v1.3.0 - 04.15.2015:**  
 * Add supports for visual effects.
@@ -99,7 +101,7 @@ DKTabPageViewController *tabPageViewController = [[DKTabPageViewController alloc
 
 #### Customizable the top bar
 
-``` objective-c
+```objective-c
 /**
  *  Height of the tab bar. Defautls to 40.
  */
