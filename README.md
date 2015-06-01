@@ -106,16 +106,33 @@ DKTabPageViewController *tabPageViewController = [[DKTabPageViewController alloc
 @property (nonatomic, assign) CGFloat tabBarHeight UI_APPEARANCE_SELECTOR;
 
 /**
+ * Height of the selected indicator. Defaults to 3.
+ */
+@property (nonatomic, assign) CGFloat selectedIndicatorHeight UI_APPEARANCE_SELECTOR;
+
+/**
+ * Color of the selected indicator. Defaults to an orange-red color.
+ */
+@property (nonatomic, copy) UIColor *selectedIndicatorColor UI_APPEARANCE_SELECTOR;
+
+/**
  *  Font of the tab bar. Defautls to [UIFont systemFontOfSize:14].
  */
 @property (nonatomic, strong) UIFont *titleFont UI_APPEARANCE_SELECTOR;
+
+@property (nonatomic, copy) UIColor *titleColor UI_APPEARANCE_SELECTOR;
+
+@property (nonatomic, copy) UIColor *selectedTitleColor UI_APPEARANCE_SELECTOR;
+
+/**
+ * Color of the 1 point shadow underline. Defaults to a gray color.
+ */
+@property (nonatomic, copy) UIColor *shadowColor UI_APPEARANCE_SELECTOR;
 
 /**
  *  The selection indicator is draw on bottom of the tab bar.
  */
 @property (nonatomic, strong) UIView *selectionIndicatorView;
-
-@property(nonatomic, copy) UIColor *backgroundColor UI_APPEARANCE_SELECTOR; // Removed on 1.3.0.
 ```
 
 #### Custom scrolling animation of the top bar(as demo)
@@ -150,6 +167,10 @@ DKTabPageViewController *tabPageViewController = [[DKTabPageViewController alloc
 }];
 
 ```
+
+## Special Thanks
+Thanks for your contribution!
+<a href="https://github.com/tatey" target="_blank">Tate Johnson</a>
 
 ## License
 This code is distributed under the terms and conditions of the <a href="https://github.com/zhangao0086/DKTabPageViewController/master/LICENSE">MIT license</a>.

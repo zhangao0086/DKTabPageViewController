@@ -20,6 +20,8 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     
+    self.automaticallyAdjustsScrollViewInsets = NO;
+    
     NSMutableArray *items = [NSMutableArray arrayWithCapacity:5];
     for (int i = 0; i < 5; i++) {
         TableViewController *vc = [TableViewController new];
@@ -37,7 +39,7 @@
     
     DKTabPageViewController *tabPageViewController = [[DKTabPageViewController alloc] initWithItems:items];
 //    tabPageViewController.showTabPageBar = NO;
-    tabPageViewController.contentInsets = UIEdgeInsetsMake(44, 0, 0, 0);
+    tabPageViewController.contentInsets = UIEdgeInsetsMake(44, 0, 49, 0);
     [self addChildViewController:tabPageViewController];
     [self.view addSubview:tabPageViewController.view];
     
