@@ -16,6 +16,9 @@
 DKTabPageViewController is an UIViewController subclass that support for multiple tab and gestures. Each tab represents a ViewController instance, independent of each other. View supports lazy loading and response viewWillAppear、viewWillDisappear etc methods. Adding support for custom animation to text of the top bar.
 
 ----
+**v1.4.1 - 06.02.2015:**  
+* Adding KVO for `selectedIndex`
+
 **v1.4.0 - 06.01.2015:**  
 * Customized more.
 
@@ -39,10 +42,10 @@ DKTabPageViewController is an UIViewController subclass that support for multipl
 ``` bash
 $ pod search DKTabPageViewController
 
--> DKTabPageViewController (1.3.6)
+-> DKTabPageViewController (1.4.1)
    DKTabPageViewController is an UIViewController subclass that support for multiple
    tab and gestures.
-   pod 'DKTabPageViewController', '~> 1.3.6'
+   pod 'DKTabPageViewController', '~> 1.4.0'
    - Homepage: https://github.com/zhangao0086/DKTabPageViewController
    - Source:   https://github.com/zhangao0086/DKTabPageViewController.git
    - Versions: 1.2.0, 1.1.0, 1.0.0, 0.0.6, 0.0.5, 0.0.4, 0.0.3, 0.0.2, 0.0.1 [master

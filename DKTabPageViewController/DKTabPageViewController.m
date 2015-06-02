@@ -718,7 +718,9 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
     NSInteger newIndex = scrollView.contentOffset.x / CGRectGetWidth(scrollView.bounds);
     if (self.selectedIndex != newIndex) {
+        [self willChangeValueForKey:NSStringFromSelector(@selector(selectedIndex))];
         [self setSelectedIndexByIndex:newIndex];
+        [self didChangeValueForKey:NSStringFromSelector(@selector(selectedIndex))];
     }
 }
 
