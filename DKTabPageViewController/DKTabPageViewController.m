@@ -577,7 +577,7 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
 }
 
 - (void)setSelectedIndex:(NSInteger)selectedIndex {
-    if (selectedIndex < 0 || selectedIndex > self.items.count) {
+    if (selectedIndex < 0 || selectedIndex >= self.items.count) {
         return;
     }
 
