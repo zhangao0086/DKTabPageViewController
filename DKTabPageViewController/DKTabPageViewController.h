@@ -87,7 +87,7 @@ typedef void(^TabPageBarAnimationBlock)(DKTabPageViewController *weakTabPageView
 - (instancetype)initWithItems:(NSArray *)items;
 
 @property (nonatomic, readonly) DKTabPageBar *tabPageBar;
-
+@property (nonatomic, readonly) NSArray *items;
 @property (nonatomic, assign) NSInteger selectedIndex;
 @property (nonatomic, readonly) UIViewController *selectedViewController;
 
