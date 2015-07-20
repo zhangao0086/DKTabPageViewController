@@ -545,6 +545,7 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
         _mainScrollView.alwaysBounceVertical = NO;
         _mainScrollView.directionalLockEnabled = YES;
         _mainScrollView.backgroundColor = [UIColor clearColor];
+        _mainScrollView.delaysContentTouches = NO;
     }
     return _mainScrollView;
 }
