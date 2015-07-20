@@ -614,7 +614,6 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
 
 - (void)setupContentInsetsForView:(UIView *)view {
     if ([view isKindOfClass:[UIScrollView class]]) {
-        self.mainScrollViewConstraintY.constant = 0;
         UIScrollView *scrollView = (UIScrollView *)view;
         
         if (!(scrollView.contentInset.top >= self.scrollViewContentInsets.top &&
