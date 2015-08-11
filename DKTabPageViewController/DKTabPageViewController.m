@@ -369,7 +369,7 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
 
 @interface DKTabPageViewController () <UIScrollViewDelegate>
 
-@property (nonatomic, strong) NSArray *items;
+@property (nonatomic, copy, readwrite) NSArray *items;
 @property (nonatomic, strong) UIScrollView *mainScrollView;
 @property (nonatomic, strong) DKTabPageBar *tabPageBar;
 @property (nonatomic, assign) UIEdgeInsets scrollViewContentInsets;
