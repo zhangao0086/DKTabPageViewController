@@ -450,6 +450,7 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
                                                                   attribute:NSLayoutAttributeTop
                                                                  multiplier:1.0
                                                                    constant:0.0];
+    self.mainScrollView.scrollsToTop = NO;
     [self.view addConstraint:self.mainScrollViewConstraintY];
     
     [self setupTabBar];
