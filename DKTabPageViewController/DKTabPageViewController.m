@@ -192,6 +192,7 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
     if (self.previousSelectedIndex == selectedIndex) {
         return;
     }
+
     _selectedIndex = selectedIndex;
     
     UIButton *selectedButton = [self.items[_selectedIndex] button];
@@ -368,7 +369,7 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
 
 @interface DKTabPageViewController () <UIScrollViewDelegate>
 
-@property (nonatomic, copy) NSArray *items;
+@property (nonatomic, copy, readwrite) NSArray *items;
 @property (nonatomic, strong) UIScrollView *mainScrollView;
 @property (nonatomic, strong) DKTabPageBar *tabPageBar;
 @property (nonatomic, assign) UIEdgeInsets scrollViewContentInsets;
@@ -545,6 +546,7 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
         _mainScrollView.alwaysBounceVertical = NO;
         _mainScrollView.directionalLockEnabled = YES;
         _mainScrollView.backgroundColor = [UIColor clearColor];
+        _mainScrollView.delaysContentTouches = NO;
     }
     return _mainScrollView;
 }
@@ -577,6 +579,10 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
 }
 
 - (void)setSelectedIndex:(NSInteger)selectedIndex {
+    if (selectedIndex < 0 || selectedIndex >= self.items.count) {
+        return;
+    }
+
     self.mainScrollView.contentOffset = CGPointMake(selectedIndex * CGRectGetWidth(self.mainScrollView.bounds), 0);
     [self setSelectedIndexByIndex:selectedIndex];
 }
@@ -610,7 +616,6 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
 
 - (void)setupContentInsetsForView:(UIView *)view {
     if ([view isKindOfClass:[UIScrollView class]]) {
-        self.mainScrollViewConstraintY.constant = 0;
         UIScrollView *scrollView = (UIScrollView *)view;
         
         if (!(scrollView.contentInset.top >= self.scrollViewContentInsets.top &&
@@ -723,6 +728,7 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
         [self setSelectedIndexByIndex:newIndex];
         [self didChangeValueForKey:NSStringFromSelector(@selector(selectedIndex))];
     }
+    [self cleanupSubviews];
 }
 
 @end
