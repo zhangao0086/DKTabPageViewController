@@ -176,6 +176,7 @@ DKTabPageViewController *tabPageViewController = [[DKTabPageViewController alloc
 ## Special Thanks
 Thanks for your contribution!
 <a href="https://github.com/tatey" target="_blank">Tate Johnson</a>
+<a href="https://github.com/matthewryan" target="_blank">Matthew Ryan</a>
 
 ## License
 This code is distributed under the terms and conditions of the <a href="https://github.com/zhangao0086/DKTabPageViewController/master/LICENSE">MIT license</a>.
