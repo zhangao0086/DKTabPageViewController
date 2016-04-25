@@ -96,8 +96,6 @@ typedef void(^TabPageBarAnimationBlock)(DKTabPageViewController *weakTabPageView
  */
 @property (nonatomic, assign) BOOL showTabPageBar;
 
-@property (nonatomic, assign) UIEdgeInsets contentInsets;
-
 /**
  *  Whether allow scroll gestures. Defaults to YES.
  */

@@ -73,6 +73,7 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
 @property (nonatomic, assign) NSInteger previousSelectedIndex;
 
 @property (nonatomic, copy) void (^tabChangedBlock)(NSInteger selectedIndex);
+@property (nonatomic, copy) void (^tabDidChangeHeightBlock)();
 
 @end
 
@@ -269,6 +270,10 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
     CGRect frame = self.frame;
     frame.size.height = tabBarHeight;
     self.frame = frame;
+	
+	if (self.tabDidChangeHeightBlock) {
+		self.tabDidChangeHeightBlock();
+	}
     
     [self setNeedsDisplay];
 }
@@ -372,7 +377,6 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
 @property (nonatomic, copy, readwrite) NSArray *items;
 @property (nonatomic, strong) UIScrollView *mainScrollView;
 @property (nonatomic, strong) DKTabPageBar *tabPageBar;
-@property (nonatomic, assign) UIEdgeInsets scrollViewContentInsets;
 @property (nonatomic, strong) NSLayoutConstraint *mainScrollViewConstraintY;
 
 @property (nonatomic, assign) NSInteger previousSelectedIndex;
@@ -388,48 +392,18 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
         
         self.showTabPageBar = YES;
         self.gestureScrollEnabled = YES;
+		self.automaticallyAdjustsScrollViewInsets = NO;
     }
     return self;
 }
 
-- (void)viewWillLayoutSubviews {
-    [super viewWillLayoutSubviews];
-    
-    if (self.showTabPageBar) {
-        CGRect tabPageBarFrame = self.tabPageBar.frame;
-        tabPageBarFrame.size.width = CGRectGetWidth(self.view.bounds);
-        self.tabPageBar.frame = tabPageBarFrame;
-    }
-    
-    self.contentInsets = self.contentInsets;
-}
-
-- (void)viewDidLayoutSubviews {
-    [super viewDidLayoutSubviews];
-    
-    if (!self.mainScrollView.isTracking && !self.mainScrollView.dragging) {
-        self.mainScrollView.contentSize = CGSizeMake(CGRectGetWidth(self.mainScrollView.bounds) * self.childViewControllers.count, 0);
-        self.mainScrollView.contentOffset = CGPointMake(CGRectGetWidth(self.mainScrollView.bounds) * self.selectedIndex, 0);
-        
-        /**
-         *  Fixed bugs for content size incorrect when called _resizeWithOldSuperviewSize on iOS 7
-         */
-        if (!DKTABPAGE_IOS_VERSION_GREATER_THAN_8) {
-            [self cleanupSubviews];
-        }
-        
-        if (self.selectedViewController) {
-            [self.mainScrollView removeConstraints:self.mainScrollView.constraints];
-            [self addConstraintsToView:self.selectedViewController.view forIndex:self.selectedIndex];
-        }
-    }
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+	
     self.view.backgroundColor = [UIColor clearColor];
-    
+	
+	[self setupTabBar];
+	
     [self.view addSubview:self.mainScrollView];
     [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[scrollView]-0-|"
                                                                       options:NSLayoutFormatDirectionLeadingToTrailing
@@ -450,22 +424,25 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
                                                                      toItem:self.view
                                                                   attribute:NSLayoutAttributeTop
                                                                  multiplier:1.0
-                                                                   constant:0.0];
+                                                                   constant:0];
     self.mainScrollView.scrollsToTop = NO;
     [self.view addConstraint:self.mainScrollViewConstraintY];
-    
-    [self setupTabBar];
+	
     [self setupItems];
     
     self.selectedIndex = _selectedIndex;
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
+- (void)viewDidLayoutSubviews {
+	[super viewDidLayoutSubviews];
+	
+	if (!self.mainScrollView.isTracking && !self.mainScrollView.dragging) {
+		self.mainScrollView.contentSize = CGSizeMake(CGRectGetWidth(self.mainScrollView.bounds) * self.childViewControllers.count, 0);
+	}
 }
 
-- (void)dealloc {
-    // ...
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
 }
 
 #pragma mark - Methods
@@ -487,7 +464,8 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
 
 - (void)setupTabBar {
     if (self.showTabPageBar) {
-        self.tabPageBar.frame = CGRectMake(0, CGRectGetMinY(self.tabPageBar.frame), 0, self.tabPageBar.tabBarHeight);
+        self.tabPageBar.frame = CGRectMake(0, CGRectGetMinY(self.tabPageBar.frame), CGRectGetWidth(self.view.bounds), self.tabPageBar.tabBarHeight);
+		self.tabPageBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         
         __weak DKTabPageViewController *weakSelf = self;
         [self.tabPageBar setTabChangedBlock:^(NSInteger selectedIndex) {
@@ -496,38 +474,16 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
                 DKTabPageItem *willToSelectItem = weakSelf.items[selectedIndex];
                 weakSelf.tabPageBarAnimationBlock(weakSelf, selectedItem == willToSelectItem ? nil : selectedItem.button, willToSelectItem.button, 1);
             }
-            
+			
             weakSelf.selectedIndex = selectedIndex;
         }];
         [self.view addSubview:self.tabPageBar];
         [self.tabPageBar setItems:self.items];
-    }
-}
-
-- (void)setContentInsets:(UIEdgeInsets)contentInsets {
-    _contentInsets = contentInsets;
-    
-    if (self.showTabPageBar) {
-        CGRect tabPageBarframe = self.tabPageBar.frame;
-        tabPageBarframe.origin.y = contentInsets.top;
-        self.tabPageBar.frame = tabPageBarframe;
-    }
-    
-    [self calculateScrollViewContentInsets];
-    if (self.selectedViewController) {
-        if ([self.selectedViewController isViewLoaded]) {
-            [self setupContentInsetsForView:self.selectedViewController.view];
-        }
-    }
-}
-
-- (void)calculateScrollViewContentInsets {
-    if (self.showTabPageBar) {
-        self.scrollViewContentInsets = UIEdgeInsetsMake(CGRectGetMaxY(self.tabPageBar.frame), self.contentInsets.left,
-                                                        self.contentInsets.bottom, self.contentInsets.right);
-    } else {
-        self.scrollViewContentInsets = self.contentInsets;
-    }
+		
+		[self.tabPageBar setTabDidChangeHeightBlock:^{
+			[weakSelf updateMainScrollViewConstraintY];
+		}];
+	}
 }
 
 - (UIScrollView *)mainScrollView {
@@ -549,6 +505,14 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
         _mainScrollView.delaysContentTouches = NO;
     }
     return _mainScrollView;
+}
+
+- (void)updateMainScrollViewConstraintY {
+	if (self.showTabPageBar) {
+		self.mainScrollViewConstraintY.constant = self.tabPageBar.tabBarHeight;
+	} else {
+		self.mainScrollViewConstraintY.constant = 0;
+	}
 }
 
 - (void)setupItems {
@@ -611,28 +575,6 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
                                                                                 metrics:nil
                                                                                   views:@{@"contentView" : view,
                                                                                           @"superView" : view.superview}]];
-    [self setupContentInsetsForView:view];
-}
-
-- (void)setupContentInsetsForView:(UIView *)view {
-    if ([view isKindOfClass:[UIScrollView class]]) {
-        UIScrollView *scrollView = (UIScrollView *)view;
-        
-        if (!(scrollView.contentInset.top >= self.scrollViewContentInsets.top &&
-              scrollView.contentInset.bottom <= self.scrollViewContentInsets.bottom)) {
-            
-            scrollView.contentInset = self.scrollViewContentInsets;
-            scrollView.scrollIndicatorInsets = self.scrollViewContentInsets;
-            
-            scrollView.contentOffset = CGPointMake(0, -scrollView.contentInset.top);
-        }
-    } else {
-        if (self.showTabPageBar) {
-            self.mainScrollViewConstraintY.constant = self.tabPageBar.tabBarHeight;
-        } else {
-            self.mainScrollViewConstraintY.constant = 0;
-        }
-    }
 }
 
 - (void)cleanupSubviews {
@@ -670,6 +612,7 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
 }
 
 #pragma mark - UIScrollView delegate methods
+
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
     if (!self.mainScrollView.isDragging && !self.mainScrollView.decelerating) {
         return;
