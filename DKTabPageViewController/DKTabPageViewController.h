@@ -75,6 +75,11 @@
  */
 @property (nonatomic, strong) UIView *selectionIndicatorView;
 
+/**
+ *  Defaults to YES.
+ */
+@property (nonatomic, assign) BOOL fittingIndicatorViewWidthToTitle;
+
 @end
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -96,6 +96,7 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
     self = [super initWithFrame:frame];
     if (self) {
         self.selectionIndicatorView = [[UIView alloc] initWithFrame:CGRectZero];
+		self.fittingIndicatorViewWidthToTitle = YES;
     }
     return self;
 }
@@ -156,11 +157,13 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
                 itemButton.selected = self.selectedIndex == i;
                 
                 button = itemButton;
-                
-                CGFloat titleWidth = dktabpage_getTextSize(self.titleFont, vcItem.title, CGFLOAT_MAX).width + 5;
-                if (titleWidth > indicatorWidth) {
-                    indicatorWidth = titleWidth;
-                }
+				
+				if (self.fittingIndicatorViewWidthToTitle) {
+					CGFloat titleWidth = dktabpage_getTextSize(self.titleFont, vcItem.title, CGFLOAT_MAX).width + 5;
+					if (titleWidth > indicatorWidth) {
+						indicatorWidth = titleWidth;
+					}
+				}
             } else if ([item isKindOfClass:[DKTabPageButtonItem class]]) {
                 DKTabPageButtonItem *buttonItem = (DKTabPageButtonItem *)item;
                 [self setupButtonStyleForButton:buttonItem.button];
@@ -172,7 +175,10 @@ CGSize dktabpage_getTextSize(UIFont *font,NSString *text, CGFloat maxWidth){
             
             [self addSubview:button];
         }
-        
+		
+		if (!self.fittingIndicatorViewWidthToTitle) {
+			indicatorWidth = CGRectGetWidth(self.bounds) / self.items.count;
+		}
         self.indicatorWidth = indicatorWidth;
         [self addSubview:self.selectionIndicatorView];
         [self setupSelectionIndicatorView];

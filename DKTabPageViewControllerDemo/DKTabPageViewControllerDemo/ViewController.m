@@ -39,7 +39,6 @@
     
     DKTabPageViewController *tabPageViewController = [[DKTabPageViewController alloc] initWithItems:items];
 //    tabPageViewController.showTabPageBar = NO;
-    tabPageViewController.contentInsets = UIEdgeInsetsMake(44, 0, 49, 0);
     [self addChildViewController:tabPageViewController];
     [self.view addSubview:tabPageViewController.view];
     
