@@ -652,8 +652,13 @@ CGSize dktabpage_getTextSize(UIFont *font, NSString *text, CGFloat maxWidth) {
         [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
 
         if (self.offsetConstraintX) {
-            self.offsetConstraintX.constant = (index * size.width);
-            self.mainScrollView.contentOffset = CGPointMake(index * size.width, 0);
+            [coordinator animateAlongsideTransition:^(id <UIViewControllerTransitionCoordinatorContext> context) {
+                self.mainScrollView.contentOffset = CGPointMake(index * size.width, 0); //if not here, animation on rotation jagged.
+                self.offsetConstraintX.constant = (index * size.width);
+            } completion:^(id <UIViewControllerTransitionCoordinatorContext> context) {
+                self.mainScrollView.contentOffset = CGPointMake(index * size.width, 0); //if not in completion block, this doesn't always stick for last item and retains despite assignment, old value.
+                self.offsetConstraintX.constant = (index * size.width);
+            }];
         }
     }
 }
