@@ -34,7 +34,7 @@ CGSize dktabpage_getTextSize(UIFont *font, NSString *text, CGFloat maxWidth) {
 
 @interface DKTabPageItem ()
 
-@property(nonatomic, strong) UIButton *button;
+@property (nonatomic, strong) UIButton *button;
 
 @end
 
@@ -67,15 +67,17 @@ CGSize dktabpage_getTextSize(UIFont *font, NSString *text, CGFloat maxWidth) {
 
 @interface DKTabPageBar ()
 
-@property(nonatomic, copy) NSArray *items;
-@property(nonatomic, assign) CGSize itemSize;
-@property(nonatomic, assign) CGFloat indicatorWidth;
+@property (nonatomic, copy) NSArray *items;
+@property (nonatomic, assign) CGSize itemSize;
+@property (nonatomic, assign) CGFloat indicatorWidth;
 
-@property(nonatomic, assign) NSInteger selectedIndex;
-@property(nonatomic, assign) NSInteger previousSelectedIndex;
+@property (nonatomic, assign) NSInteger selectedIndex;
+@property (nonatomic, assign) NSInteger previousSelectedIndex;
 
-@property(nonatomic, copy) void (^tabChangedBlock)(NSInteger selectedIndex);
-@property(nonatomic, copy) void (^tabDidChangeHeightBlock)();
+@property (nonatomic, copy) void (^tabChangedBlock)(NSInteger selectedIndex);
+@property (nonatomic, copy) void (^tabDidChangeHeightBlock)();
+
+@property (nonatomic, assign) BOOL hasRegistered;
 
 @end
 
@@ -165,7 +167,10 @@ CGSize dktabpage_getTextSize(UIFont *font, NSString *text, CGFloat maxWidth) {
                     if (titleWidth > indicatorWidth) {
                         indicatorWidth = titleWidth;
                     }
-                }
+				} else {
+					[vcItem addObserver:self forKeyPath:@"title" options:NSKeyValueObservingOptionNew context:nil];
+					self.hasRegistered = YES;
+				}
             } else if ([item isKindOfClass:[DKTabPageButtonItem class]]) {
                 DKTabPageButtonItem *buttonItem = (DKTabPageButtonItem *) item;
                 [self setupButtonStyleForButton:buttonItem.button];
@@ -189,6 +194,32 @@ CGSize dktabpage_getTextSize(UIFont *font, NSString *text, CGFloat maxWidth) {
             self.tabChangedBlock(self.selectedIndex);
         }
     }
+}
+
+- (void)removeObservers {
+	if (self.hasRegistered) {
+		for (DKTabPageViewControllerItem *vcItem in self.items) {
+			[vcItem removeObserver:self forKeyPath:@"title"];
+		}
+		
+		self.hasRegistered = NO;
+	}
+}
+
+- (void)dealloc {
+	[self removeObservers];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context {
+	if ([keyPath isEqualToString:@"title"] && [object isKindOfClass:[DKTabPageViewControllerItem class]]) {
+		NSInteger index = [self.items indexOfObject:object];
+		if (index != NSNotFound) {
+			UIButton *button = [self viewWithTag:index + 1];
+			[button setTitle:((DKTabPageViewControllerItem *)object).title forState:UIControlStateNormal];
+		}
+	} else {
+		[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+	}
 }
 
 - (void)setItems:(NSArray *)items {
@@ -318,7 +349,7 @@ CGSize dktabpage_getTextSize(UIFont *font, NSString *text, CGFloat maxWidth) {
     BOOL contentViewIsAlready;
 }
 
-@property(nonatomic, strong) UIView *contentView;
+@property (nonatomic, strong) UIView *contentView;
 
 @end
 
@@ -382,13 +413,13 @@ CGSize dktabpage_getTextSize(UIFont *font, NSString *text, CGFloat maxWidth) {
 
 @interface DKTabPageViewController () <UIScrollViewDelegate>
 
-@property(nonatomic, copy, readwrite) NSArray *items;
-@property(nonatomic, strong) UIScrollView *mainScrollView;
-@property(nonatomic, strong) DKTabPageBar *tabPageBar;
-@property(nonatomic, strong) NSLayoutConstraint *mainScrollViewConstraintY;
+@property (nonatomic, copy, readwrite) NSArray *items;
+@property (nonatomic, strong) UIScrollView *mainScrollView;
+@property (nonatomic, strong) DKTabPageBar *tabPageBar;
+@property (nonatomic, strong) NSLayoutConstraint *mainScrollViewConstraintY;
 
-@property(nonatomic, assign) NSInteger previousSelectedIndex;
-@property(nonatomic, strong) NSLayoutConstraint *offsetConstraintX;
+@property (nonatomic, assign) NSInteger previousSelectedIndex;
+@property (nonatomic, strong) NSLayoutConstraint *offsetConstraintX;
 
 @end
 
