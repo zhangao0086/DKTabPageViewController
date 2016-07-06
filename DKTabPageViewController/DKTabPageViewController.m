@@ -135,6 +135,7 @@ CGSize dktabpage_getTextSize(UIFont *font, NSString *text, CGFloat maxWidth) {
 
 - (void)drawRect:(CGRect)rect {
     [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+	[self removeObservers];
 
     UIView *shadow = [[UIView alloc] initWithFrame:CGRectMake(0, CGRectGetHeight(self.bounds) - 0.5,
             CGRectGetWidth(self.bounds), 0.5)];
@@ -154,7 +155,7 @@ CGSize dktabpage_getTextSize(UIFont *font, NSString *text, CGFloat maxWidth) {
 
                 UIButton *itemButton = [UIButton buttonWithType:UIButtonTypeCustom];
                 [self setupButtonStyleForButton:itemButton];
-                itemButton.tag = i;
+                itemButton.tag = i + 1;
                 [itemButton setTitle:vcItem.title forState:UIControlStateNormal];
                 [itemButton addTarget:self action:@selector(onButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
                 vcItem.button = itemButton;
@@ -287,7 +288,7 @@ CGSize dktabpage_getTextSize(UIFont *font, NSString *text, CGFloat maxWidth) {
     DKTabPageItem *previousItem = self.items[self.selectedIndex];
     previousItem.button.selected = NO;
 
-    self.selectedIndex = button.tag;
+    self.selectedIndex = button.tag - 1;
 
     DKTabPageItem *selectedItem = self.items[self.selectedIndex];
     selectedItem.button.selected = YES;
