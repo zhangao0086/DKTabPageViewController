@@ -107,52 +107,52 @@ CGSize dktabpage_getTextSize(UIFont *font, NSString *text, CGFloat maxWidth) {
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-
+    
     self.itemSize = CGSizeMake(CGRectGetWidth(self.bounds) / self.items.count, CGRectGetHeight(self.bounds));
     CGFloat currentX = 0;
     for (int i = 0; i < self.items.count; i++) {
         DKTabPageItem *item = self.items[i];
         UIButton *button;
-
+        
         if ([item isKindOfClass:[DKTabPageViewControllerItem class]]) {
             DKTabPageViewControllerItem *vcItem = (DKTabPageViewControllerItem *) item;
-
+            
             button = vcItem.button;
         } else if ([item isKindOfClass:[DKTabPageButtonItem class]]) {
             DKTabPageButtonItem *buttonItem = (DKTabPageButtonItem *) item;
-
+            
             button = buttonItem.button;
         } else {
             assert(0);
         }
-
+        
         button.frame = CGRectMake(currentX, 0, self.itemSize.width, self.itemSize.height);
         currentX += self.itemSize.width;
     }
-
+    
     [self setupSelectionIndicatorView];
 }
 
 - (void)drawRect:(CGRect)rect {
     [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-	[self removeObservers];
-
+    [self removeObservers];
+    
     UIView *shadow = [[UIView alloc] initWithFrame:CGRectMake(0, CGRectGetHeight(self.bounds) - 0.5,
-            CGRectGetWidth(self.bounds), 0.5)];
+                                                              CGRectGetWidth(self.bounds), 0.5)];
     shadow.backgroundColor = self.shadowColor;
     shadow.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
     [self addSubview:shadow];
-
+    
     if (self.items.count != 0) {
         CGFloat indicatorWidth = 0;
-
+        
         for (int i = 0; i < self.items.count; i++) {
             DKTabPageItem *item = self.items[i];
             UIButton *button;
-
+            
             if ([item isKindOfClass:[DKTabPageViewControllerItem class]]) {
                 DKTabPageViewControllerItem *vcItem = (DKTabPageViewControllerItem *) item;
-
+                
                 UIButton *itemButton = [UIButton buttonWithType:UIButtonTypeCustom];
                 [self setupButtonStyleForButton:itemButton];
                 itemButton.tag = i + 1;
@@ -160,37 +160,37 @@ CGSize dktabpage_getTextSize(UIFont *font, NSString *text, CGFloat maxWidth) {
                 [itemButton addTarget:self action:@selector(onButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
                 vcItem.button = itemButton;
                 itemButton.selected = self.selectedIndex == i;
-
+                
                 button = itemButton;
-
+                
                 if (self.fittingIndicatorViewWidthToTitle) {
                     CGFloat titleWidth = dktabpage_getTextSize(self.titleFont, vcItem.title, CGFLOAT_MAX).width + 5;
                     if (titleWidth > indicatorWidth) {
                         indicatorWidth = titleWidth;
                     }
-				} else {
-					[vcItem addObserver:self forKeyPath:@"title" options:NSKeyValueObservingOptionNew context:nil];
-					self.hasRegistered = YES;
-				}
+                } else {
+                    [vcItem addObserver:self forKeyPath:@"title" options:NSKeyValueObservingOptionNew context:nil];
+                    self.hasRegistered = YES;
+                }
             } else if ([item isKindOfClass:[DKTabPageButtonItem class]]) {
                 DKTabPageButtonItem *buttonItem = (DKTabPageButtonItem *) item;
                 [self setupButtonStyleForButton:buttonItem.button];
-
+                
                 button = buttonItem.button;
             } else {
                 assert(0);
             }
-
+            
             [self addSubview:button];
         }
-
+        
         if (!self.fittingIndicatorViewWidthToTitle) {
             indicatorWidth = CGRectGetWidth(self.bounds) / self.items.count;
         }
         self.indicatorWidth = indicatorWidth;
         [self addSubview:self.selectionIndicatorView];
         [self setupSelectionIndicatorView];
-
+        
         if (self.tabChangedBlock) {
             self.tabChangedBlock(self.selectedIndex);
         }
@@ -198,34 +198,34 @@ CGSize dktabpage_getTextSize(UIFont *font, NSString *text, CGFloat maxWidth) {
 }
 
 - (void)removeObservers {
-	if (self.hasRegistered) {
-		for (DKTabPageViewControllerItem *vcItem in self.items) {
-			[vcItem removeObserver:self forKeyPath:@"title"];
-		}
-		
-		self.hasRegistered = NO;
-	}
+    if (self.hasRegistered) {
+        for (DKTabPageViewControllerItem *vcItem in self.items) {
+            [vcItem removeObserver:self forKeyPath:@"title"];
+        }
+        
+        self.hasRegistered = NO;
+    }
 }
 
 - (void)dealloc {
-	[self removeObservers];
+    [self removeObservers];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context {
-	if ([keyPath isEqualToString:@"title"] && [object isKindOfClass:[DKTabPageViewControllerItem class]]) {
-		NSInteger index = [self.items indexOfObject:object];
-		if (index != NSNotFound) {
-			UIButton *button = [self viewWithTag:index + 1];
-			[button setTitle:((DKTabPageViewControllerItem *)object).title forState:UIControlStateNormal];
-		}
-	} else {
-		[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
-	}
+    if ([keyPath isEqualToString:@"title"] && [object isKindOfClass:[DKTabPageViewControllerItem class]]) {
+        NSInteger index = [self.items indexOfObject:object];
+        if (index != NSNotFound) {
+            UIButton *button = [self viewWithTag:index + 1];
+            [button setTitle:((DKTabPageViewControllerItem *)object).title forState:UIControlStateNormal];
+        }
+    } else {
+        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+    }
 }
 
 - (void)setItems:(NSArray *)items {
     _items = [items copy];
-
+    
     [self setNeedsDisplay];
 }
 
@@ -233,26 +233,26 @@ CGSize dktabpage_getTextSize(UIFont *font, NSString *text, CGFloat maxWidth) {
     if (self.previousSelectedIndex == selectedIndex) {
         return;
     }
-
+    
     _selectedIndex = selectedIndex;
-
+    
     UIButton *selectedButton = [self.items[_selectedIndex] button];
     selectedButton.selected = YES;
     [self setupButtonStyleForButton:selectedButton];
-
+    
     if (self.previousSelectedIndex != NSNotFound) {
         UIButton *previousSelectedButton = [self.items[self.previousSelectedIndex] button];
         previousSelectedButton.selected = NO;
         [self setupButtonStyleForButton:previousSelectedButton];
     }
-
+    
     self.previousSelectedIndex = self.selectedIndex;
 }
 
 - (void)onScrollingForOffsetFactor:(CGFloat)factor {
     if (self.selectionIndicatorView != nil) {
         CGFloat offset = self.itemSize.width - CGRectGetWidth(self.selectionIndicatorView.bounds);
-
+        
         CGRect frame = self.selectionIndicatorView.frame;
         frame.origin.x = (CGRectGetWidth(self.selectionIndicatorView.bounds) + offset) * factor + offset / 2;
         self.selectionIndicatorView.frame = frame;
@@ -275,8 +275,8 @@ CGSize dktabpage_getTextSize(UIFont *font, NSString *text, CGFloat maxWidth) {
     }
     CGFloat offset = self.itemSize.width - self.indicatorWidth;
     self.selectionIndicatorView.frame = CGRectMake(self.itemSize.width * self.selectedIndex + offset / 2,
-            CGRectGetHeight(self.bounds) - CGRectGetHeight(self.selectionIndicatorView.bounds),
-            self.indicatorWidth, self.selectedIndicatorHeight);
+                                                   CGRectGetHeight(self.bounds) - CGRectGetHeight(self.selectionIndicatorView.bounds),
+                                                   self.indicatorWidth, self.selectedIndicatorHeight);
     self.selectionIndicatorView.backgroundColor = self.selectedIndicatorColor;
 }
 
@@ -284,19 +284,19 @@ CGSize dktabpage_getTextSize(UIFont *font, NSString *text, CGFloat maxWidth) {
     if (button.selected) {
         return;
     }
-
+    
     DKTabPageItem *previousItem = self.items[self.selectedIndex];
     previousItem.button.selected = NO;
-
+    
     self.selectedIndex = button.tag - 1;
-
+    
     DKTabPageItem *selectedItem = self.items[self.selectedIndex];
     selectedItem.button.selected = YES;
-
+    
     [UIView beginAnimations:nil context:nil];
     [self setupSelectionIndicatorView];
     [UIView commitAnimations];
-
+    
     if (self.tabChangedBlock) {
         self.tabChangedBlock(self.selectedIndex);
     }
@@ -306,39 +306,39 @@ CGSize dktabpage_getTextSize(UIFont *font, NSString *text, CGFloat maxWidth) {
 
 - (void)setTabBarHeight:(CGFloat)tabBarHeight {
     _tabBarHeight = tabBarHeight;
-
+    
     CGRect frame = self.frame;
     frame.size.height = tabBarHeight;
     self.frame = frame;
-
+    
     if (self.tabDidChangeHeightBlock) {
         self.tabDidChangeHeightBlock();
     }
-
+    
     [self setNeedsDisplay];
 }
 
 - (void)setSelectionIndicatorView:(UIView *)selectionIndicatorView {
     _selectionIndicatorView = selectionIndicatorView;
-
+    
     [self setNeedsDisplay];
 }
 
 - (void)setTitleFont:(UIFont *)titleFont {
     _titleFont = titleFont;
-
+    
     [self setNeedsDisplay];
 }
 
 - (void)setTitleColor:(UIColor *)titleColor {
     _titleColor = titleColor;
-
+    
     [self setNeedsDisplay];
 }
 
 - (void)setSelectedTitleColor:(UIColor *)selectedTitleColor {
     _selectedTitleColor = selectedTitleColor;
-
+    
     [self setNeedsDisplay];
 }
 
@@ -361,9 +361,9 @@ CGSize dktabpage_getTextSize(UIFont *font, NSString *text, CGFloat maxWidth) {
     if (self) {
         _contentView = [[UIView alloc] initWithFrame:self.bounds];
         _contentView.translatesAutoresizingMaskIntoConstraints = NO;
-
+        
         [self addSubview:_contentView];
-
+        
         NSDictionary *viewDict = NSDictionaryOfVariableBindings(_contentView, self);
         [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_contentView(==self)]|" options:0 metrics:0 views:viewDict]];
         [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_contentView(==self)]|" options:0 metrics:0 views:viewDict]];
@@ -417,6 +417,7 @@ CGSize dktabpage_getTextSize(UIFont *font, NSString *text, CGFloat maxWidth) {
 @property (nonatomic, copy, readwrite) NSArray *items;
 @property (nonatomic, strong) UIScrollView *mainScrollView;
 @property (nonatomic, strong) DKTabPageBar *tabPageBar;
+@property (nonatomic, assign) NSInteger selectedIndex;
 @property (nonatomic, strong) NSLayoutConstraint *mainScrollViewConstraintY;
 
 @property (nonatomic, assign) NSInteger previousSelectedIndex;
@@ -430,7 +431,7 @@ CGSize dktabpage_getTextSize(UIFont *font, NSString *text, CGFloat maxWidth) {
     self = [super init];
     if (self) {
         self.items = items;
-
+        
         self.showTabPageBar = YES;
         self.gestureScrollEnabled = YES;
         self.automaticallyAdjustsScrollViewInsets = NO;
@@ -440,17 +441,17 @@ CGSize dktabpage_getTextSize(UIFont *font, NSString *text, CGFloat maxWidth) {
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
+    
     self.view.backgroundColor = [UIColor clearColor];
-
+    
     [self setupTabBar];
-
+    
     [self.view addSubview:self.mainScrollView];
     [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[scrollView]-0-|"
                                                                       options:NSLayoutFormatDirectionLeadingToTrailing
                                                                       metrics:nil
                                                                         views:@{@"scrollView" : self.mainScrollView}]];
-
+    
     [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.mainScrollView
                                                           attribute:NSLayoutAttributeBottom
                                                           relatedBy:NSLayoutRelationEqual
@@ -458,7 +459,7 @@ CGSize dktabpage_getTextSize(UIFont *font, NSString *text, CGFloat maxWidth) {
                                                           attribute:NSLayoutAttributeBottom
                                                          multiplier:1.0
                                                            constant:0.0]];
-
+    
     self.mainScrollViewConstraintY = [NSLayoutConstraint constraintWithItem:self.mainScrollView
                                                                   attribute:NSLayoutAttributeTop
                                                                   relatedBy:NSLayoutRelationEqual
@@ -468,15 +469,15 @@ CGSize dktabpage_getTextSize(UIFont *font, NSString *text, CGFloat maxWidth) {
                                                                    constant:0];
     self.mainScrollView.scrollsToTop = NO;
     [self.view addConstraint:self.mainScrollViewConstraintY];
-
+    
     [self setupItems];
-
+    
     self.selectedIndex = _selectedIndex;
 }
 
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
-
+    
     if (!self.mainScrollView.isTracking && !self.mainScrollView.dragging) { //this calls viewDidScroll
         self.mainScrollView.contentSize = CGSizeMake(CGRectGetWidth(self.mainScrollView.bounds) * self.childViewControllers.count, CGRectGetHeight(self.mainScrollView.bounds));
     }
@@ -486,11 +487,11 @@ CGSize dktabpage_getTextSize(UIFont *font, NSString *text, CGFloat maxWidth) {
     [super didReceiveMemoryWarning];
 }
 
-#pragma mark - Methods
+#pragma mark - Public
 
 - (void)setTabPageBarAnimationBlock:(TabPageBarAnimationBlock)tabPageBarAnimationBlock {
     _tabPageBarAnimationBlock = tabPageBarAnimationBlock;
-
+    
     if (self.tabPageBar.layer.contents != nil) {
         self.tabPageBar.tabChangedBlock(self.selectedIndex);
     }
@@ -503,11 +504,18 @@ CGSize dktabpage_getTextSize(UIFont *font, NSString *text, CGFloat maxWidth) {
     return _tabPageBar;
 }
 
+- (void)selectIndex:(NSInteger)index {
+    self.selectedIndex = index;
+    [self.tabPageBar setupSelectionIndicatorView];
+}
+
+#pragma mark - Private
+
 - (void)setupTabBar {
     if (self.showTabPageBar) {
         self.tabPageBar.frame = CGRectMake(0, CGRectGetMinY(self.tabPageBar.frame), CGRectGetWidth(self.view.bounds), self.tabPageBar.tabBarHeight);
         self.tabPageBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-
+        
         __weak DKTabPageViewController *weakSelf = self;
         [self.tabPageBar setTabChangedBlock:^(NSInteger selectedIndex) {
             if (weakSelf.tabPageBarAnimationBlock) {
@@ -515,12 +523,12 @@ CGSize dktabpage_getTextSize(UIFont *font, NSString *text, CGFloat maxWidth) {
                 DKTabPageItem *willToSelectItem = weakSelf.items[selectedIndex];
                 weakSelf.tabPageBarAnimationBlock(weakSelf, selectedItem == willToSelectItem ? nil : selectedItem.button, willToSelectItem.button, 1);
             }
-
+            
             weakSelf.selectedIndex = selectedIndex;
         }];
         [self.view addSubview:self.tabPageBar];
         [self.tabPageBar setItems:self.items];
-
+        
         [self.tabPageBar setTabDidChangeHeightBlock:^{
             [weakSelf updateMainScrollViewConstraintY];
         }];
@@ -559,7 +567,7 @@ CGSize dktabpage_getTextSize(UIFont *font, NSString *text, CGFloat maxWidth) {
 - (void)setupItems {
     for (int i = 0; i < self.items.count; i++) {
         DKTabPageItem *item = self.items[i];
-
+        
         if ([item isKindOfClass:[DKTabPageViewControllerItem class]]) {
             DKTabPageViewControllerItem *vcItem = (DKTabPageViewControllerItem *) item;
             [self addChildViewController:vcItem.contentViewController];
@@ -579,7 +587,7 @@ CGSize dktabpage_getTextSize(UIFont *font, NSString *text, CGFloat maxWidth) {
 
 - (void)setGestureScrollEnabled:(BOOL)gestureScrollEnabled {
     _gestureScrollEnabled = gestureScrollEnabled;
-
+    
     self.mainScrollView.scrollEnabled = gestureScrollEnabled;
 }
 
@@ -587,9 +595,9 @@ CGSize dktabpage_getTextSize(UIFont *font, NSString *text, CGFloat maxWidth) {
     if (selectedIndex < 0 || selectedIndex >= self.items.count) {
         return;
     }
-
+    
     self.mainScrollView.contentOffset = // this calls viewDidScroll, thus logic must handle the fact its not really scrolling.
-            CGPointMake(selectedIndex * CGRectGetWidth(self.mainScrollView.bounds), 0);
+    CGPointMake(selectedIndex * CGRectGetWidth(self.mainScrollView.bounds), 0);
     [self setSelectedIndexByIndex:selectedIndex];
 }
 
@@ -603,7 +611,7 @@ CGSize dktabpage_getTextSize(UIFont *font, NSString *text, CGFloat maxWidth) {
                                                                     attribute:NSLayoutAttributeHeight
                                                                    multiplier:1.0
                                                                      constant:0]];
-
+    
     [self.mainScrollView addConstraint:[NSLayoutConstraint constraintWithItem:view
                                                                     attribute:NSLayoutAttributeTop
                                                                     relatedBy:NSLayoutRelationEqual
@@ -611,7 +619,7 @@ CGSize dktabpage_getTextSize(UIFont *font, NSString *text, CGFloat maxWidth) {
                                                                     attribute:NSLayoutAttributeTop
                                                                    multiplier:1.0
                                                                      constant:0]];
-
+    
     [self.mainScrollView addConstraint:[NSLayoutConstraint constraintWithItem:view
                                                                     attribute:NSLayoutAttributeWidth
                                                                     relatedBy:NSLayoutRelationEqual
@@ -619,7 +627,7 @@ CGSize dktabpage_getTextSize(UIFont *font, NSString *text, CGFloat maxWidth) {
                                                                     attribute:NSLayoutAttributeWidth
                                                                    multiplier:1.0
                                                                      constant:0]];
-
+    
     [self.mainScrollView addConstraint:self.offsetConstraintX = [NSLayoutConstraint constraintWithItem:view
                                                                                              attribute:NSLayoutAttributeLeading
                                                                                              relatedBy:NSLayoutRelationEqual
@@ -639,27 +647,27 @@ CGSize dktabpage_getTextSize(UIFont *font, NSString *text, CGFloat maxWidth) {
 
 - (void)setSelectedIndexByIndex:(NSInteger)newIndex {
     DKTabPageViewControllerItem *selectedItem = self.items[newIndex];
-
+    
     if ([selectedItem isKindOfClass:[DKTabPageViewControllerItem class]]) {
         if (selectedItem.contentViewController == nil) return;
-
+        
         NSInteger previousSelectedIndex = _selectedIndex;
         _selectedIndex = newIndex;
         if (self.pageChangedBlock && previousSelectedIndex != newIndex) {
             self.pageChangedBlock(newIndex);
         }
-
+        
         if (self.showTabPageBar) {
             self.tabPageBar.selectedIndex = newIndex;
         }
-
+        
         if (selectedItem.contentViewController.view.superview == nil) {
             [self.mainScrollView addSubview:selectedItem.contentViewController.view];
             [self addConstraintsToView:selectedItem.contentViewController.view forIndex:_selectedIndex];
         }
         [self cleanupSubviews];
     }
-
+    
     self.previousSelectedIndex = newIndex;
 }
 
@@ -682,7 +690,7 @@ CGSize dktabpage_getTextSize(UIFont *font, NSString *text, CGFloat maxWidth) {
     if (DKTABPAGE_IOS_VERSION_GREATER_THAN_8) {
         NSInteger index = self.selectedIndex;
         [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
-
+        
         if (self.offsetConstraintX) {
             [coordinator animateAlongsideTransition:^(id <UIViewControllerTransitionCoordinatorContext> context) {
                 self.mainScrollView.contentOffset = CGPointMake(index * size.width, 0); //if not here, animation on rotation jagged.
@@ -702,21 +710,21 @@ CGSize dktabpage_getTextSize(UIFont *font, NSString *text, CGFloat maxWidth) {
     if (!self.mainScrollView.isDragging && !self.mainScrollView.decelerating) {
         return;
     }
-
+    
     CGPoint contentOffset = scrollView.contentOffset;
     CGFloat factor = contentOffset.x / CGRectGetWidth(scrollView.bounds);
     NSInteger willToIndex = -1;
-
+    
     if (factor > (self.showTabPageBar ? self.tabPageBar.selectedIndex : self.selectedIndex)) {
         willToIndex = ceil(factor);
     } else if (factor < (self.showTabPageBar ? self.tabPageBar.selectedIndex : self.selectedIndex)) {
         willToIndex = floor(factor);
     }
-
+    
     if (willToIndex == -1 || willToIndex >= self.childViewControllers.count) {
         willToIndex = NSNotFound;
     }
-
+    
     if (self.showTabPageBar && (scrollView.isDecelerating || scrollView.isDragging)) {
         if (self.tabPageBarAnimationBlock) {
             __weak DKTabPageViewController *weakSelf = self;
@@ -739,10 +747,10 @@ CGSize dktabpage_getTextSize(UIFont *font, NSString *text, CGFloat maxWidth) {
         }
         [self.tabPageBar onScrollingForOffsetFactor:factor];
     }
-
+    
     if (!scrollView.isDragging)
         return; //do to rotation, we should not execute below code because the calculations could be wrong as widths change and contentOffset points to old rotation location.
-
+    
     if (willToIndex != NSNotFound) {
         DKTabPageViewControllerItem *item = self.items[willToIndex];
         if (item.contentViewController.view.superview == nil) {

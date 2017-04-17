@@ -93,8 +93,10 @@ typedef void(^TabPageBarAnimationBlock)(DKTabPageViewController *weakTabPageView
 
 @property (nonatomic, readonly) DKTabPageBar *tabPageBar;
 @property (nonatomic, copy, readonly) NSArray *items;
-@property (nonatomic, assign) NSInteger selectedIndex;
+@property (nonatomic, readonly) NSInteger selectedIndex;
 @property (nonatomic, readonly) UIViewController *selectedViewController;
+
+- (void)selectIndex:(NSInteger)index;
 
 /**
  *  Whether show the Tab Bar. Defaults to YES.
