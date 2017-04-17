@@ -265,6 +265,9 @@ CGSize dktabpage_getTextSize(UIFont *font, NSString *text, CGFloat maxWidth) {
     [button setTitleColor:self.titleColor forState:UIControlStateNormal];
     [button setTitleColor:self.selectedTitleColor forState:UIControlStateHighlighted];
     [button setTitleColor:self.selectedTitleColor forState:UIControlStateSelected];
+    button.titleLabel.lineBreakMode = NSLineBreakByWordWrapping;
+    button.titleLabel.numberOfLines = 0;
+    button.titleLabel.textAlignment = NSTextAlignmentCenter;
     [button setBackgroundColor:[UIColor clearColor]];
     button.titleLabel.font = self.titleFont;
 }
