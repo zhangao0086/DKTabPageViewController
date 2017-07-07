@@ -103,6 +103,8 @@ typedef void(^TabPageBarAnimationBlock)(DKTabPageViewController *weakTabPageView
  */
 @property (nonatomic, assign) BOOL showTabPageBar;
 
+- (void)setShowTabPageBar:(BOOL)showTabPageBar animated:(BOOL)animated;
+
 /**
  *  Whether allow scroll gestures. Defaults to YES.
  */

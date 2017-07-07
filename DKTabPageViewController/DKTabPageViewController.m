@@ -435,7 +435,7 @@ CGSize dktabpage_getTextSize(UIFont *font, NSString *text, CGFloat maxWidth) {
     if (self) {
         self.items = items;
         
-        self.showTabPageBar = YES;
+        _showTabPageBar = YES;
         self.gestureScrollEnabled = YES;
         self.automaticallyAdjustsScrollViewInsets = NO;
     }
@@ -510,6 +510,30 @@ CGSize dktabpage_getTextSize(UIFont *font, NSString *text, CGFloat maxWidth) {
 - (void)selectIndex:(NSInteger)index {
     self.selectedIndex = index;
     [self.tabPageBar setupSelectionIndicatorView];
+}
+
+- (void)setShowTabPageBar:(BOOL)showTabPageBar {
+    [self setShowTabPageBar:showTabPageBar animated:NO];
+}
+
+- (void)setShowTabPageBar:(BOOL)showTabPageBar animated:(BOOL)animated {
+    _showTabPageBar = showTabPageBar;
+    
+    if (animated) {
+        [UIView beginAnimations:nil context:nil];
+        [UIView setAnimationDuration:0.25];
+    }
+    CGRect tabPageBarFrame = self.tabPageBar.frame;
+    tabPageBarFrame.size.height = showTabPageBar ? self.tabPageBar.tabBarHeight : 0;
+    self.tabPageBar.frame = tabPageBarFrame;
+    
+    [self updateMainScrollViewConstraintY];
+    
+    [self.mainScrollView setNeedsLayout];
+    [self.mainScrollView layoutIfNeeded];
+    if (animated) {
+        [UIView commitAnimations];
+    }
 }
 
 #pragma mark - Private
