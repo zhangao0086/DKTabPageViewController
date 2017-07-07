@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name          = "DKTabPageViewController"
-  s.version       = "1.4.8"
+  s.version       = "1.4.9"
   s.summary       = "DKTabPageViewController is an UIViewController subclass that support for multiple tab and gestures."
   s.homepage      = "https://github.com/zhangao0086/DKTabPageViewController"
   s.license       = { :type => "MIT", :file => "LICENSE" }
